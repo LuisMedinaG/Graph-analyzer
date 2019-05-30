@@ -1,0 +1,8 @@
+C:\Users\Beto\Documents\CUCEI\4to Semestre\2.1 Anaya - Sem algoritmia\Proyecto_Integrador\Proyecto_Integrador\bin\Debug\Proyecto_Integrador.exe.config
+C:\Users\Beto\Documents\CUCEI\4to Semestre\2.1 Anaya - Sem algoritmia\Proyecto_Integrador\Proyecto_Integrador\bin\Debug\Proyecto_Integrador.exe
+C:\Users\Beto\Documents\CUCEI\4to Semestre\2.1 Anaya - Sem algoritmia\Proyecto_Integrador\Proyecto_Integrador\bin\Debug\Proyecto_Integrador.pdb
+C:\Users\Beto\Documents\CUCEI\4to Semestre\2.1 Anaya - Sem algoritmia\Proyecto_Integrador\Proyecto_Integrador\obj\Debug\Proyecto_Integrador.csprojResolveAssemblyReference.cache
+C:\Users\Beto\Documents\CUCEI\4to Semestre\2.1 Anaya - Sem algoritmia\Proyecto_Integrador\Proyecto_Integrador\obj\Debug\Proyecto_Integrador.MainForm.resources
+C:\Users\Beto\Documents\CUCEI\4to Semestre\2.1 Anaya - Sem algoritmia\Proyecto_Integrador\Proyecto_Integrador\obj\Debug\Proyecto_Integrador.csproj.GenerateResource.Cache
+C:\Users\Beto\Documents\CUCEI\4to Semestre\2.1 Anaya - Sem algoritmia\Proyecto_Integrador\Proyecto_Integrador\obj\Debug\Proyecto_Integrador.exe
+C:\Users\Beto\Documents\CUCEI\4to Semestre\2.1 Anaya - Sem algoritmia\Proyecto_Integrador\Proyecto_Integrador\obj\Debug\Proyecto_Integrador.pdb
