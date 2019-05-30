@@ -75,5 +75,15 @@ namespace Proyecto_Integrador
 		{
 			return string.Format("Vertice {0}", id);
 		}
-	}
+
+        public static bool operator != ( Vertex v_1, Vertex v_2 )
+        {
+            return v_1.id != v_2.id;
+        }
+        public static bool operator == ( Vertex v_1, Vertex v_2)
+        {
+            return v_1.id == v_2.id;
+        }
+
+    }
 }

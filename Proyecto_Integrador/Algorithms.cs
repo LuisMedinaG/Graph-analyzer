@@ -14,14 +14,13 @@ namespace Proyecto_Integrador
         private List<Point> lPR;
         private Vertex v_act, des;
 
-        public Algorithms() { }
-        public Algorithms( List<Vertex> lC )
+        public Algorithms( List<Vertex> lV )
         {
-            VertexL = lC;
+            VertexL = lV;
             EdgesL = new List<Edge>();
             MyGraph = new Graph();
 
-            foreach(Vertex cir in lC)
+            foreach(Vertex cir in lV)
                 foreach(Edge ari in cir.getLA())
                     if(!EdgesL.Contains(ari))
                         EdgesL.Add(ari);
@@ -36,7 +35,7 @@ namespace Proyecto_Integrador
 
             pila.Push(v_o);
             visitados.Add(v_o);
-            MyGraph.LVer.Add(v_o);
+            MyGraph.VerL.Add(v_o);
 
             DFS(pila, visitados, MyGraph, lP);
             return MyGraph;
@@ -49,7 +48,7 @@ namespace Proyecto_Integrador
                 des = e.GetDestino();
                 if(!visited.Contains(des))
                 {
-                    g.LVer.Add(des);
+                    g.VerL.Add(des);
                     if(!g.EdgL.Contains(e))
                         g.EdgL.Add(e);
 
@@ -71,34 +70,78 @@ namespace Proyecto_Integrador
         public Graph Dijsktra( Vertex org, Vertex des, List<Point> lP )
         {
             var g = new Graph();
-            var distL = new List<double>();
-            var S = new List<Vertex>();
-            var Q = new List<Vertex>();
-            //double dist;
-            //Vertex u;
+            var S = new List<DijElemnt>();
+            var Q = new Queue<DijElemnt>();
+            var DijEleL = new List<DijElemnt>();
+            DijElemnt u, v;
 
             for(int i = 0; i < VertexL.Count; i++)
             {
-                distL.Add(double.MaxValue);
+                DijEleL.Add(new DijElemnt(VertexL[i]));
+            }
+            u = DijEleL.Find(x => x.Ver.GetId() == org.GetId());
+
+            u.DistAcu = 0;
+            u.Definitivo = true;
+            
+            while(!SolucionDij(DijEleL))//Todos no este definitivos
+            {
+                foreach(Edge e in u.Ver.getLA())
+                {
+                    v = DijEleL.Find(x => x.Ver.GetId() == e.GetDestino().GetId());
+
+                    if(v.DistAcu > u.DistAcu + e.GetPonderacion())
+                    {
+                        v.DistAcu = u.DistAcu + e.GetPonderacion();
+                        v.Proveniente = u.Ver;
+                        //lP.AddRange(e.GetLP());//<-----Agregando puntos
+                    }
+
+                }
+
+                u = MinDist(DijEleL);
+                u.Definitivo = true;
+
+                if(u.Ver.GetId() == des.GetId()) {
+                    break;
+                }
             }
 
-            //dist = 0;
-            distL[org.GetId()] = 0;
-            Q.Add(org);
+            //Provenientes construir camino
+            DijElemnt aux = u;//Des
+            g.VerL.Add(aux.Ver);
 
-            //while (Q.Count != 0) {
-            //	u = minDist(Q, dist);
+            while(aux.Ver != org)
+            {
+                foreach(Edge e in aux.Proveniente.getLA())
+                {
+                    if(aux.Ver == e.GetDestino())
+                    {
+                        e.GetLP().Reverse();//Porque las aristas se van agregando del final al inicio
+                        lP.AddRange(e.GetLP());
+                        g.EdgL.Add(e);
+                        break;
+                    }
+                }
+                aux = DijEleL.Find(x => x.Ver == aux.Proveniente);
+                g.VerL.Add(aux.Ver);
+            }
 
-            //	foreach (Edge e in u.getLA()) {
-            //		if (distAnt > dist + w(u,v)) {
-            //          lP.AddRange(e.GetLP());//<----------------Agrgando puntos
-            //		}
-
-            //	}
-
-            //}
-            return null;
+            lP.Reverse();//Begint to end
+            return g;
         }
+
+        private bool SolucionDij( List<DijElemnt> dEL )
+        {
+            bool flag = true;
+            for(int i = 0; i < dEL.Count; i++)
+            {
+                if(dEL[i].Definitivo == false)
+                    flag = false;
+            }
+            return flag;
+        }
+
         public Graph Kruskal()
         {
             Edge edge;
@@ -132,11 +175,11 @@ namespace Proyecto_Integrador
             Edge ariMin;
             Vertex vertex = v_i;
             List<Point> lP = new List<Point>();
-            int numOfVer = DFS(v_i, lP).LVer.Count;
+            int numOfVer = DFS(v_i, lP).VerL.Count;
             var aCandidatas = new List<Edge>();
             var vVistitados = new List<Vertex>();
 
-            while(MyGraph.LVer.Count < numOfVer - 1)
+            while(MyGraph.VerL.Count < numOfVer - 1)
             {//O(n)
                 vVistitados.Add(vertex);
 
@@ -153,9 +196,15 @@ namespace Proyecto_Integrador
         }
 
         //Dijkstra
-        Vertex MinDist( List<Vertex> q, double dist )
+        DijElemnt MinDist( List<DijElemnt> Q )
         {
-            return null;
+            DijElemnt u = new DijElemnt(null);
+            for(int i = 0; i < Q.Count; i++)
+            {
+                if(Q[i].DistAcu < u.DistAcu && Q[i].Definitivo == false)
+                    u = Q[i];
+            }
+            return u;
         }
         //Kruskal
         private int Find( int x, List<int> link )

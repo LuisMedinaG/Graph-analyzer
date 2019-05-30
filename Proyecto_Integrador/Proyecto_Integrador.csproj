@@ -53,6 +53,7 @@
     <Compile Include="Agent.cs" />
     <Compile Include="Algorithms.cs" />
     <Compile Include="BmpManager.cs" />
+    <Compile Include="DijkstraElemnt.cs" />
     <Compile Include="Edge.cs" />
     <Compile Include="BmpProcessor.cs" />
     <Compile Include="Graph.cs" />

@@ -49,9 +49,9 @@ namespace Proyecto_Integrador
             }
         }
         //HUNTER
-        public Agent( Vertex vOrg )
+        public Agent( Vertex vOrg, List<Vertex> lV)
         {
-            alg = new Algorithms();
+            alg = new Algorithms(lV);
             LP = new List<Point>();
             Tree = alg.DFS(vOrg, LP);//Points Are added here
 
@@ -62,9 +62,9 @@ namespace Proyecto_Integrador
             }
         }
         //PREY 
-        public Agent( Vertex org, Vertex des )
+        public Agent( Vertex org, Vertex des, List<Vertex> lV )
         {
-            alg = new Algorithms();
+            alg = new Algorithms(lV);
             LP = new List<Point>();
             Tree = alg.Dijsktra(org, des, LP);
 

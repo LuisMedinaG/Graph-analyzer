@@ -394,22 +394,22 @@ namespace Proyecto_Integrador
             Edge currE;
             Agent agn;
 
-            //TODO: Especificar la la presa//
+            //TODO: Especificar la(s) presa(s)//
             while(agentL.Count > 0)
             {
-                j += 15;//Avanzo puntos
+                j += 15;//Avanzo punto (+15)
                 k++;//Avanzo arista
 
                 for(i = 0; i < agentL.Count; i++)
                 {
-                    agn = agentL[i];
+                    agn = agentL[i];//Agente actual
                     currE = agn.CurrEdge;//Arista actual
                     currP = agn.CurrPoint;//Punto actual
                     lastP = currE.GetLP()[0];//Ultimi punto de esa arista
                                              //^^^//
-                    if(currE.GetLP().Contains(lastP))//Punto se encuentra en esa arista
+                    if(currE.GetLP().Contains(lastP))//Punto en que se encuentra de la arista
                     {
-                        if(j < agn.LP.Count)//Total de todos lo puntos 
+                        if(j < agn.LP.Count)//Total de todos lo puntos del Grafo
                         {
                             // [Checar (solo si presa) si choco con algun deprededor]
                             // [Sacar distancia con depredador]
@@ -419,15 +419,15 @@ namespace Proyecto_Integrador
                             agentL.Remove(agn);//Si llegue al final, elimino agente
                     } else
                     {
-                        if(k < agn.Tree.EdgL.Count)//Total vertices
+                        if(k < agn.Tree.EdgL.Count)//Total vertices Grafo
                         {
                             //  [Checar antes de avanzar si hay un depredaror en la sig arista]
-                            //  [Avanzar]
-                            //  [Si hay alguien en la misma arista regresarse]
-                            agn.CurrEdge = agn.Tree.EdgL[k];//Tomo la siguiente arista
+                            //      [Si no hay - Avanzar]
+                                        agn.CurrEdge = agn.Tree.EdgL[k];//Tomo la siguiente arista
+                            //      [Si hay alguien - Regresarse]
                         }
                     }
-                    if(j - 1 < agn.LP.Count)
+                    if(j - 1 < agn.LP.Count)//Si el sig punto no sale de los indices
                         DrawAgent(agn.LP[j - 1], whiteBrsh, bmp);
                     DrawAgent(agn.CurrPoint, orangeBrsh, bmp);
                 }
@@ -545,7 +545,7 @@ namespace Proyecto_Integrador
         }
 
         //Getters
-        public List<Vertex> GetLC()
+        public List<Vertex> GetLV()
         {
             return lC;
         }

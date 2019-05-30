@@ -20,7 +20,7 @@ namespace Proyecto_Integrador
             this.lEdg = lEdg;
         }
 
-        public List<Vertex> LVer {
+        public List<Vertex> VerL {
             get { return lVer; }
             set { lVer = value; }
         }

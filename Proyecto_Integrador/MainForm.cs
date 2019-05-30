@@ -47,7 +47,7 @@ namespace Proyecto_Integrador
         {
             List<Vertex> myLc;
 
-            myLc = myBmpProcess.GetLC();
+            myLc = myBmpProcess.GetLV();
             treeViewCircles.Nodes.Clear();
             for(int i = 0; i < myLc.Count; i++)
             {
@@ -69,18 +69,18 @@ namespace Proyecto_Integrador
             UpdateTreeView();
 
             pictureBoxImg.Image = drwAni.bmpAnalyse;
-            tbNumVer.Maximum = myBmpProcess.GetLC().Count;
-            tbHunters.Maximum = myBmpProcess.GetLC().Count;
+            tbNumVer.Maximum = myBmpProcess.GetLV().Count;
+            tbHunters.Maximum = myBmpProcess.GetLV().Count;
 
             cbInitialVertex.Items.Clear();
-            foreach(Vertex v in myBmpProcess.GetLC())
+            foreach(Vertex v in myBmpProcess.GetLV())
             {
                 cbInitialVertex.Items.Add(v.GetId());
                 cbDestinationVertex.Items.Add(v.GetId());
             }
 
             //___Enables bttns___
-            if(myBmpProcess.GetLC().Count > 1)
+            if(myBmpProcess.GetLV().Count > 1)
             {
                 tbNumVer.Enabled = true;
                 bttnAddAge.Enabled = true;
@@ -101,7 +101,7 @@ namespace Proyecto_Integrador
             } else
             {
                 Int32.TryParse(obj.ToString(), out ind);
-                return myBmpProcess.GetLC()[ind - 1];
+                return myBmpProcess.GetLV()[ind - 1];
             }
         }
         private Vertex SelectedDesVer()
@@ -114,7 +114,7 @@ namespace Proyecto_Integrador
             } else
             {
                 Int32.TryParse(obj.ToString(), out ind);
-                return myBmpProcess.GetLC()[ind - 1];
+                return myBmpProcess.GetLV()[ind - 1];
             }
         }
         private int NewNum( List<int> rL, int end )
@@ -166,7 +166,7 @@ namespace Proyecto_Integrador
             lAgents = new List<Agent>();
             rand = new Random();
 
-            if(numAgents > 0 && myBmpProcess.GetLC().Count > 1)
+            if(numAgents > 0 && myBmpProcess.GetLV().Count > 1)
             {
                 for(int i = 0; i < numAgents; i++)
                 {
@@ -177,7 +177,7 @@ namespace Proyecto_Integrador
 
                     lNum.Add(uniqueNum);
                     //NewNum(lNum, numAgents);
-                    org = myBmpProcess.GetLC()[uniqueNum];
+                    org = myBmpProcess.GetLV()[uniqueNum];
                     lAgents.Add(new Agent(org, i));
                 }
                 //Animate list of agents
@@ -244,7 +244,7 @@ namespace Proyecto_Integrador
         private void BttnPrim_Click( object sender, EventArgs e )
         {
             drwAni.bmpTree = new Bitmap(drwAni.bmpAnalyse);
-            alg = new Algorithms(myBmpProcess.GetLC());
+            alg = new Algorithms(myBmpProcess.GetLV());
             Vertex v = SelcetedOrgVer();
 
             try
@@ -271,7 +271,7 @@ namespace Proyecto_Integrador
             //ScanImage();
 
             drwAni.bmpTree = new Bitmap(drwAni.bmpAnalyse);
-            alg = new Algorithms(myBmpProcess.GetLC());
+            alg = new Algorithms(myBmpProcess.GetLV());
 
             ARM_Kruskal = alg.Kruskal();
             //Draw ARM 
@@ -327,20 +327,20 @@ namespace Proyecto_Integrador
             vOrg = SelcetedOrgVer();
             vDes = SelectedDesVer();
 
-            //agentL.Add(new Agent(vOrg, vDes));//Dijkstra
+            agentL.Add(new Agent(vOrg, vDes, myBmpProcess.GetLV()));//Dijkstra
 
             bttnAddHunter.Enabled = true;
         }
         private void BttnAddHunter_Click( object sender, EventArgs e )
         {
             List<int> usedRanVer = new List<int>();
-            int totVer = myBmpProcess.GetLC().Count;
+            int totVer = myBmpProcess.GetLV().Count;
             int ranVer;
 
             for(int i = 0; i < tbHunters.Value; i++)
             {
                 ranVer = NewNum(usedRanVer, totVer);
-                agentL.Add(new Agent(myBmpProcess.GetLC()[ranVer]));//DFS
+                agentL.Add(new Agent(myBmpProcess.GetLV()[ranVer], myBmpProcess.GetLV()));//DFS
             }
             myBmpProcess.AnimateAllAgents(drwAni.bmpAnalyse, agentL);
         }
@@ -362,6 +362,7 @@ namespace Proyecto_Integrador
         {
             labelNumVer.Text = tbNumVer.Value.ToString();
         }
+
         private void TbHunters_Scroll( object sender, EventArgs e )
         {
             labelHunters.Text = tbHunters.Value.ToString();
