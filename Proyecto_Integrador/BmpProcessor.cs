@@ -11,13 +11,13 @@ namespace Proyecto_Integrador
     public class BmpProcessor
     {
         int totVertex;
-        List<Vertex> lC;
+        Graph graph;
         List<Agent> lAgn;
         List<Point> lPR;
 
         //MainForm
         Bitmap bmpAnalyse, bmpBack, bmpTemp, bmpARM;
-        Brush whiteBrsh, blackBrsh, orangeBrsh, greenBrsh;
+        Brush whiteBrsh, blackBrsh, orangeBrsh, greenBrsh, purpleBrsh, brsh;
         PictureBox pbImg;
         Graphics gBmp;
 
@@ -28,11 +28,12 @@ namespace Proyecto_Integrador
             this.totVertex = 0;
             this.pbImg = pB;
 
-            this.lC = new List<Vertex>();
+            this.graph = new Graph();
 
             blackBrsh = new SolidBrush(Color.Black);
             whiteBrsh = new SolidBrush(Color.White);
             orangeBrsh = new SolidBrush(Color.Orange);
+            purpleBrsh = new SolidBrush(Color.Purple);
         }
 
         //Act 1
@@ -40,16 +41,13 @@ namespace Proyecto_Integrador
         {
             bmpTemp = new Bitmap(bmpAnalyse);
 
-
             for(int i = 0; i < bmpTemp.Width; i += 3)
                 for(int j = 0; j < bmpTemp.Height; j += 3)
                     if(IsBlack(bmpTemp.GetPixel(i, j)))
                     {
-                        lC.Add(CalcCircleCenter(i, j, bmpTemp));
+                        graph.VerL.Add(CalcCircleCenter(i, j, bmpTemp));
                     }
-
             FindObstacles(bmpAnalyse);
-            //ShortestArista();
             DrawIds();
         }
         private Vertex CalcCircleCenter( int x, int y, Bitmap bmp )
@@ -94,87 +92,82 @@ namespace Proyecto_Integrador
             //DrawCenter(pCent);
             return tempCircle;
         }
-        private void ShortestArista()
+        public void ClosestPOP_BF( Bitmap bmp )
         {
-            gBmp = Graphics.FromImage(bmpAnalyse);
-            Vertex orgMin;
-            Edge ariMin;
-            try
+            double distMin, distAct;
+            Vertex pOrg, pDes;
+            Vertex pOrgM, pDesM;
+
+            gBmp = Graphics.FromImage(bmp);
+            if(graph.VerL.Count > 1)
             {
-                orgMin = lC[0];
-                ariMin = lC[0].getLA()[0];
-            } catch(Exception)
-            {
-                return;
-            }
-            foreach(Vertex cir in lC)
-            {
-                foreach(Edge ari in cir.getLA())
+                pOrgM = graph.VerL[0];
+                pDesM = graph.VerL[1];
+
+                distMin = GetDist(pOrgM, pDesM);
+
+                for(int i = 0; i < graph.VerL.Count; i++)
                 {
-                    if(ari.GetPonderacion() < ariMin.GetPonderacion())
+                    pOrg = graph.VerL[i];
+                    for(int j = i+1; j < graph.VerL.Count; j++)
                     {
-                        orgMin = cir;
-                        ariMin = ari;
+                        pDes = graph.VerL[j];
+                        distAct = GetDist(pOrg, pDes);
+                        if(distAct < distMin /*&& distAct != 0*/)
+                        {
+                            pOrgM = pOrg;
+                            pDesM = pDes;
+                            distMin = distAct;
+                        }
                     }
                 }
+                //dibujar menor dis
+                gBmp.DrawLine(new Pen(Color.Pink, 3), pOrgM.GetX(), pOrgM.GetY(), pDesM.GetX(), pDesM.GetY()); 
             }
-            gBmp.DrawLine(new Pen(Color.Pink, 2), orgMin.GetX(), orgMin.GetY(), ariMin.GetOrigen().GetX(), ariMin.GetOrigen().GetY()); //dibujar menor dis
+            pbImg.Refresh();
         }
 
         //Act 2
         private void FindObstacles( Bitmap bmp )
         {
-            double distAct, distMin;
+            double distAct;
             int contAris = 0;
 
             Graphics gBmp_2 = Graphics.FromImage(bmp);
+            List<Point> lP, lPR;
+            Vertex ori, des;
+            Edge e;
+            Pen penBlck;
+
+            penBlck = new Pen(Color.Black, 4);
             bmpTemp = new Bitmap(bmp);
 
-            Vertex p_0, p_f, ori, des;
-            Pen penBlck, penYllw;
-            List<Point> lP, lPR;
-
-            try
-            {
-                p_0 = lC[0];
-                p_f = lC[1];
-            } catch(Exception)
-            {
-                return;
-            }
-            penBlck = new Pen(Color.Black, 4);
-            penYllw = new Pen(Color.Yellow, 2);
-
-            distMin = GetDist(p_0, p_f);
-
-            for(var i = 0; i < lC.Count; i++)
-                for(var j = i; j < lC.Count; j++)
+            for(var i = 0; i < graph.VerL.Count; i++)
+                for(var j = i; j < graph.VerL.Count; j++)
                 {
-                    ori = lC[i];
-                    des = lC[j];
-                    distAct = GetDist(ori, des);
+                    ori = graph.VerL[i];
+                    des = graph.VerL[j];
 
                     if(ori != des)
                     {
+                        distAct = GetDist(ori, des);
                         lP = new List<Point>();
                         if(DDA(ori, des, bmpTemp, lP))
                         {
-                            ori.AddArista(ori, des, distAct, ++contAris, lP);
+                            e = new Edge(ori, des, distAct, ++contAris, lP);
+                            ori.LA.Add(e);
+
+                            graph.EdgL.Add(e);//Optional
+
                             lPR = new List<Point>(lP);
                             lPR.Reverse();
-                            des.AddArista(des, ori, distAct, ++contAris, lPR);
+                            des.LA.Add(new Edge(des, ori, distAct, ++contAris, lPR));
+
                             gBmp_2.DrawLine(penBlck, ori.GetX(), ori.GetY(),
                                                    des.GetX(), des.GetY());
                         }
                     }
-                    if(distAct < distMin && distAct > 0)
-                    {
-                        distMin = distAct;
-                        p_0 = ori;
-                        p_f = des;
-                    }
                 }
-            gBmp_2.DrawLine(penYllw, p_0.GetX(), p_0.GetY(), p_f.GetX(), p_f.GetY()); //dibujar menor dis
         }
         private bool DDA( Vertex org, Vertex des, Bitmap bmp, List<Point> lP )
         {
@@ -280,7 +273,7 @@ namespace Proyecto_Integrador
             pbImg.Image = bmp;
             this.bmpARM = bmp;
 
-            if(lC.Count > 1)
+            if(graph.VerL.Count > 1)
             {
                 DeepAnimation(ARM.EdgL[0].GetOrigen(), visited, ARM);
             }
@@ -297,10 +290,9 @@ namespace Proyecto_Integrador
                     Edge edgeA = Tree.EdgL[i];
                     if(vertex == edgeA.GetOrigen() && !visited.Contains(edgeA.GetDestino()))
                     {
-                        lPR = new List<Point>(edgeA.GetLP());
-                        AnimateEdge(bmpARM, lPR);
+                        AnimateEdge(bmpARM, edgeA.GetLP());
                         DeepAnimation(edgeA.GetDestino(), visited, Tree);//diff-
-                        lPR = edgeA.GetLP();
+                        lPR = new List<Point>(edgeA.GetLP());
                         lPR.Reverse();//diff
                         if(visited.Count <= Tree.EdgL.Count)
                         {
@@ -400,6 +392,7 @@ namespace Proyecto_Integrador
                 j += 15;//Avanzo punto (+15)
                 k++;//Avanzo arista
 
+
                 for(i = 0; i < agentL.Count; i++)
                 {
                     agn = agentL[i];//Agente actual
@@ -407,6 +400,7 @@ namespace Proyecto_Integrador
                     currP = agn.CurrPoint;//Punto actual
                     lastP = currE.GetLP()[0];//Ultimi punto de esa arista
                                              //^^^//
+                    brsh = orangeBrsh;
                     if(currE.GetLP().Contains(lastP))//Punto en que se encuentra de la arista
                     {
                         if(j < agn.LP.Count)//Total de todos lo puntos del Grafo
@@ -423,13 +417,15 @@ namespace Proyecto_Integrador
                         {
                             //  [Checar antes de avanzar si hay un depredaror en la sig arista]
                             //      [Si no hay - Avanzar]
-                                        agn.CurrEdge = agn.Tree.EdgL[k];//Tomo la siguiente arista
+                            agn.CurrEdge = agn.Tree.EdgL[k];//Tomo la siguiente arista
                             //      [Si hay alguien - Regresarse]
                         }
                     }
+                    if(agn.IsPrey)
+                        brsh = purpleBrsh;
                     if(j - 1 < agn.LP.Count)//Si el sig punto no sale de los indices
                         DrawAgent(agn.LP[j - 1], whiteBrsh, bmp);
-                    DrawAgent(agn.CurrPoint, orangeBrsh, bmp);
+                    DrawAgent(agn.CurrPoint, brsh, bmp);
                 }
 
                 pbImg.Refresh();
@@ -441,6 +437,7 @@ namespace Proyecto_Integrador
 
             return true;
         }
+        
         //Drawing func.
         private void DrawCircle( Vertex cir, Bitmap bmp, Brush brush )
         {
@@ -450,21 +447,21 @@ namespace Proyecto_Integrador
             gBmp = Graphics.FromImage(bmp);
             gBmp.FillEllipse(brush, x - r, y - r, r * 2, r * 2);
         }
-        private void DrawAgent( Point p, Brush brush, Bitmap bmp )
+        public void DrawAgent( Point p, Brush brush, Bitmap bmp )
         {
             gBmp = Graphics.FromImage(bmp);
             gBmp.FillEllipse(brush, p.X - 15, p.Y - 15, 30, 30);
         }
         private void DrawIds()
         {
-            Font myFont = new Font("Arial", 14);
+            Font myFont = new Font("Arial", 16);
             gBmp = Graphics.FromImage(bmpAnalyse);
 
-            for(int i = 0; i < lC.Count; i++)
+            for(int i = 0; i < graph.VerL.Count; i++)
             {
-                gBmp.DrawString(lC[i].GetId().ToString(), myFont, whiteBrsh,
-                    lC[i].GetX() - 8,
-                    lC[i].GetY() - 9);
+                gBmp.DrawString(graph.VerL[i].GetId().ToString(), myFont, whiteBrsh,
+                    graph.VerL[i].GetX() - 8,
+                    graph.VerL[i].GetY() - 9);
             }
         }
 
@@ -545,9 +542,9 @@ namespace Proyecto_Integrador
         }
 
         //Getters
-        public List<Vertex> GetLV()
+        public List<Vertex> GetVerL()
         {
-            return lC;
+            return graph.VerL;
         }
         public int GetNumCircles()
         {

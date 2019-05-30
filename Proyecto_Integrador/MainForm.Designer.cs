@@ -53,9 +53,9 @@ namespace Proyecto_Integrador
             this.labelNumVer = new System.Windows.Forms.Label();
             this.tbNumVer = new System.Windows.Forms.TrackBar();
             this.treeViewCaMaLa = new System.Windows.Forms.TreeView();
-            this.bttnCaMaAg = new System.Windows.Forms.Button();
+            this.bttnCaMaLaAg = new System.Windows.Forms.Button();
             this.cbAgents = new System.Windows.Forms.ComboBox();
-            this.bttnCaMaVer = new System.Windows.Forms.Button();
+            this.bttnCaMaLaVer = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.bttnPrim = new System.Windows.Forms.Button();
             this.bttnKruskal = new System.Windows.Forms.Button();
@@ -74,7 +74,7 @@ namespace Proyecto_Integrador
             this.bttnAddHunter = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labelOrgDes = new System.Windows.Forms.Label();
             this.bttnFinBFS = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.bttnBruFor = new System.Windows.Forms.Button();
@@ -176,16 +176,16 @@ namespace Proyecto_Integrador
             this.treeViewCaMaLa.Size = new System.Drawing.Size(160, 52);
             this.treeViewCaMaLa.TabIndex = 6;
             // 
-            // bttnCaMaAg
+            // bttnCaMaLaAg
             // 
-            this.bttnCaMaAg.Font = new System.Drawing.Font("Calibri Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bttnCaMaAg.Location = new System.Drawing.Point(12, 496);
-            this.bttnCaMaAg.Name = "bttnCaMaAg";
-            this.bttnCaMaAg.Size = new System.Drawing.Size(76, 48);
-            this.bttnCaMaAg.TabIndex = 7;
-            this.bttnCaMaAg.Text = "Agent path";
-            this.bttnCaMaAg.UseVisualStyleBackColor = true;
-            this.bttnCaMaAg.Click += new System.EventHandler(this.BttnCaMaLa_Click);
+            this.bttnCaMaLaAg.Font = new System.Drawing.Font("Calibri Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bttnCaMaLaAg.Location = new System.Drawing.Point(12, 496);
+            this.bttnCaMaLaAg.Name = "bttnCaMaLaAg";
+            this.bttnCaMaLaAg.Size = new System.Drawing.Size(76, 48);
+            this.bttnCaMaLaAg.TabIndex = 7;
+            this.bttnCaMaLaAg.Text = "Agent path";
+            this.bttnCaMaLaAg.UseVisualStyleBackColor = true;
+            this.bttnCaMaLaAg.Click += new System.EventHandler(this.BttnCaMaLa_Click);
             // 
             // cbAgents
             // 
@@ -196,16 +196,16 @@ namespace Proyecto_Integrador
             this.cbAgents.Sorted = true;
             this.cbAgents.TabIndex = 4;
             // 
-            // bttnCaMaVer
+            // bttnCaMaLaVer
             // 
-            this.bttnCaMaVer.Font = new System.Drawing.Font("Calibri Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bttnCaMaVer.Location = new System.Drawing.Point(94, 496);
-            this.bttnCaMaVer.Name = "bttnCaMaVer";
-            this.bttnCaMaVer.Size = new System.Drawing.Size(76, 48);
-            this.bttnCaMaVer.TabIndex = 10;
-            this.bttnCaMaVer.Text = "Longest path";
-            this.bttnCaMaVer.UseVisualStyleBackColor = true;
-            this.bttnCaMaVer.Click += new System.EventHandler(this.BttnCaMaVer_Click);
+            this.bttnCaMaLaVer.Font = new System.Drawing.Font("Calibri Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bttnCaMaLaVer.Location = new System.Drawing.Point(94, 496);
+            this.bttnCaMaLaVer.Name = "bttnCaMaLaVer";
+            this.bttnCaMaLaVer.Size = new System.Drawing.Size(76, 48);
+            this.bttnCaMaLaVer.TabIndex = 10;
+            this.bttnCaMaLaVer.Text = "Longest path";
+            this.bttnCaMaLaVer.UseVisualStyleBackColor = true;
+            this.bttnCaMaLaVer.Click += new System.EventHandler(this.BttnCaMaLaVer_Click);
             // 
             // label2
             // 
@@ -388,15 +388,15 @@ namespace Proyecto_Integrador
             this.label7.Text = "Prim and Kruskal";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label1
+            // labelOrgDes
             // 
-            this.label1.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(936, 346);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(132, 48);
-            this.label1.TabIndex = 32;
-            this.label1.Text = "Orig: . . .  Des: . . .";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelOrgDes.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelOrgDes.Location = new System.Drawing.Point(936, 346);
+            this.labelOrgDes.Name = "labelOrgDes";
+            this.labelOrgDes.Size = new System.Drawing.Size(132, 48);
+            this.labelOrgDes.TabIndex = 32;
+            this.labelOrgDes.Text = "Orig:      Des:  ";
+            this.labelOrgDes.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // bttnFinBFS
             // 
@@ -427,6 +427,7 @@ namespace Proyecto_Integrador
             this.bttnBruFor.TabIndex = 35;
             this.bttnBruFor.Text = "Brute Force";
             this.bttnBruFor.UseVisualStyleBackColor = true;
+            this.bttnBruFor.Click += new System.EventHandler(this.BttnBruFor_Click);
             // 
             // bttnDivCon
             // 
@@ -457,7 +458,7 @@ namespace Proyecto_Integrador
             this.Controls.Add(this.bttnBruFor);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.bttnFinBFS);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.labelOrgDes);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.labelHunters);
@@ -476,9 +477,9 @@ namespace Proyecto_Integrador
             this.Controls.Add(this.bttnKruskal);
             this.Controls.Add(this.bttnPrim);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.bttnCaMaVer);
+            this.Controls.Add(this.bttnCaMaLaVer);
             this.Controls.Add(this.cbAgents);
-            this.Controls.Add(this.bttnCaMaAg);
+            this.Controls.Add(this.bttnCaMaLaAg);
             this.Controls.Add(this.treeViewCaMaLa);
             this.Controls.Add(this.tbNumVer);
             this.Controls.Add(this.labelNumVer);
@@ -502,9 +503,9 @@ namespace Proyecto_Integrador
 		}
 
         private System.Windows.Forms.TreeView treeViewCaMaLa;
-        private System.Windows.Forms.Button bttnCaMaAg;
+        private System.Windows.Forms.Button bttnCaMaLaAg;
         private System.Windows.Forms.ComboBox cbAgents;
-        private System.Windows.Forms.Button bttnCaMaVer;
+        private System.Windows.Forms.Button bttnCaMaLaVer;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button bttnPrim;
         private System.Windows.Forms.Button bttnKruskal;
@@ -523,7 +524,7 @@ namespace Proyecto_Integrador
         private System.Windows.Forms.Button bttnAddHunter;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelOrgDes;
         private System.Windows.Forms.Button bttnFinBFS;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button bttnBruFor;

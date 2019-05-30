@@ -15,14 +15,14 @@ namespace Proyecto_Integrador
         List<Agent> agentL;
 
         Graph ARM_Prim, ARM_Kruskal;
-        BmpManager drwAni;
+        BmpManager bmpMan;
         bool[] both = new bool[2];
 
         public MainForm()
         {
             InitializeComponent();
             DisableAllBttns();
-            drwAni = new BmpManager();
+            bmpMan = new BmpManager();
         }
 
         private void DisableAllBttns()
@@ -32,27 +32,32 @@ namespace Proyecto_Integrador
             bttnScanImg.Enabled = false;
             bttnAddAge.Enabled = false;
             cbAgents.Enabled = false;
-            bttnCaMaAg.Enabled = false;
-            bttnCaMaVer.Enabled = false;
+            bttnCaMaLaAg.Enabled = false;
+            bttnCaMaLaVer.Enabled = false;
             tbNumVer.Enabled = false;
+            //Act 4
             bttnPrim.Enabled = false;
             bttnKruskal.Enabled = false;
             bttnAnimatePrim.Enabled = false;
             bttnAnimateKruskal.Enabled = false;
             bttnBoth.Enabled = false;
+            //Act 5
             bttnAddHunter.Enabled = false;
             bttnAddPrey.Enabled = false;
+            //Act 6
+            bttnBruFor.Enabled = false;
+            bttnDivCon.Enabled = false;
         }
         private void UpdateTreeView()
         {
             List<Vertex> myLc;
 
-            myLc = myBmpProcess.GetLV();
+            myLc = myBmpProcess.GetVerL();
             treeViewCircles.Nodes.Clear();
             for(int i = 0; i < myLc.Count; i++)
             {
                 treeViewCircles.Nodes.Add(myLc[i].ToString());
-                foreach(Edge e in myLc[i].getLA())
+                foreach(Edge e in myLc[i].GetLA())
                 {
                     treeViewCircles.Nodes[i].Nodes.Add(e.ToString());
                 }
@@ -61,26 +66,26 @@ namespace Proyecto_Integrador
         private void ScanImage()
         {
             agentL = new List<Agent>();//<-----
-            drwAni.bmpAnalyse = new Bitmap(drwAni.bmpOrg);
-            myBmpProcess = new BmpProcessor(drwAni.bmpAnalyse, pictureBoxImg);
+            bmpMan.bmpAnalyse = new Bitmap(bmpMan.bmpOrg);
+            myBmpProcess = new BmpProcessor(bmpMan.bmpAnalyse, pictureBoxImg);
 
             //Modifyes bmpAnalyse
             myBmpProcess.FindCircles();
             UpdateTreeView();
 
-            pictureBoxImg.Image = drwAni.bmpAnalyse;
-            tbNumVer.Maximum = myBmpProcess.GetLV().Count;
-            tbHunters.Maximum = myBmpProcess.GetLV().Count;
+            pictureBoxImg.Image = bmpMan.bmpAnalyse;
+            tbNumVer.Maximum = myBmpProcess.GetVerL().Count;
+            tbHunters.Maximum = myBmpProcess.GetVerL().Count;
 
             cbInitialVertex.Items.Clear();
-            foreach(Vertex v in myBmpProcess.GetLV())
+            foreach(Vertex v in myBmpProcess.GetVerL())
             {
                 cbInitialVertex.Items.Add(v.GetId());
                 cbDestinationVertex.Items.Add(v.GetId());
             }
 
             //___Enables bttns___
-            if(myBmpProcess.GetLV().Count > 1)
+            if(myBmpProcess.GetVerL().Count > 1)
             {
                 tbNumVer.Enabled = true;
                 bttnAddAge.Enabled = true;
@@ -88,6 +93,8 @@ namespace Proyecto_Integrador
                 bttnKruskal.Enabled = true;
                 bttnBoth.Enabled = true;
                 bttnAddPrey.Enabled = true;
+                bttnBruFor.Enabled = true;
+                bttnDivCon.Enabled = true;
             }
         }
 
@@ -101,7 +108,7 @@ namespace Proyecto_Integrador
             } else
             {
                 Int32.TryParse(obj.ToString(), out ind);
-                return myBmpProcess.GetLV()[ind - 1];
+                return myBmpProcess.GetVerL()[ind - 1];
             }
         }
         private Vertex SelectedDesVer()
@@ -114,7 +121,7 @@ namespace Proyecto_Integrador
             } else
             {
                 Int32.TryParse(obj.ToString(), out ind);
-                return myBmpProcess.GetLV()[ind - 1];
+                return myBmpProcess.GetVerL()[ind - 1];
             }
         }
         private int NewNum( List<int> rL, int end )
@@ -136,15 +143,14 @@ namespace Proyecto_Integrador
             openFileDialog1.ShowDialog();
             try
             {
-                drwAni.bmpOrg = new Bitmap(openFileDialog1.FileName);
+                bmpMan.bmpOrg = new Bitmap(openFileDialog1.FileName);
             } catch(Exception)
             {
                 MessageBox.Show("Error: Archivo no existente");
                 return;
             }
-            //Fill picture box
-            pictureBoxImg.Image = null;
-            pictureBoxImg.Image = drwAni.bmpOrg;
+            //Fill picture box with Original (UNTOCHED)
+            pictureBoxImg.Image = bmpMan.bmpOrg;
             //___Enables bttns___
             bttnScanImg.Enabled = true;
         }
@@ -166,7 +172,7 @@ namespace Proyecto_Integrador
             lAgents = new List<Agent>();
             rand = new Random();
 
-            if(numAgents > 0 && myBmpProcess.GetLV().Count > 1)
+            if(numAgents > 0 && myBmpProcess.GetVerL().Count > 1)
             {
                 for(int i = 0; i < numAgents; i++)
                 {
@@ -177,15 +183,15 @@ namespace Proyecto_Integrador
 
                     lNum.Add(uniqueNum);
                     //NewNum(lNum, numAgents);
-                    org = myBmpProcess.GetLV()[uniqueNum];
+                    org = myBmpProcess.GetVerL()[uniqueNum];
                     lAgents.Add(new Agent(org, i));
                 }
                 //Animate list of agents
                 myBmpProcess.AnimateLAgents(lAgents);
 
                 //___Enables bttns___
-                bttnCaMaAg.Enabled = true;
-                bttnCaMaVer.Enabled = true;
+                bttnCaMaLaAg.Enabled = true;
+                bttnCaMaLaVer.Enabled = true;
                 cbAgents.Enabled = true;
                 bttnAddAge.Enabled = false;
                 tbNumVer.Enabled = false;
@@ -198,12 +204,12 @@ namespace Proyecto_Integrador
                 }
             }
         }
-        private void BttnCaMaVer_Click( object sender, EventArgs e )
+        private void BttnCaMaLaVer_Click( object sender, EventArgs e )
         {
-            drwAni.bmpRoad = new Bitmap(drwAni.bmpAnalyse);
+            bmpMan.bmpRoad = new Bitmap(bmpMan.bmpAnalyse);
 
-            myBmpProcess.DrawAgentRoad(lAgents[0], drwAni.bmpRoad, treeViewCaMaLa);
-            pictureBoxImg.Image = drwAni.bmpRoad;
+            myBmpProcess.DrawAgentRoad(lAgents[0], bmpMan.bmpRoad, treeViewCaMaLa);
+            pictureBoxImg.Image = bmpMan.bmpRoad;
         }
         private void BttnCaMaLa_Click( object sender, EventArgs e )
         {
@@ -211,18 +217,18 @@ namespace Proyecto_Integrador
             int index;
             if(obj != null)
             {
-                drwAni.bmpRoad = new Bitmap(drwAni.bmpAnalyse);
+                bmpMan.bmpRoad = new Bitmap(bmpMan.bmpAnalyse);
                 Int32.TryParse(obj.ToString(), out index);
 
                 try
                 {
                     Agent agn = lAgents[index];
-                    myBmpProcess.DrawAgentRoad(agn, drwAni.bmpRoad, treeViewCaMaLa);
+                    myBmpProcess.DrawAgentRoad(agn, bmpMan.bmpRoad, treeViewCaMaLa);
                 } catch(Exception)
                 {
-                    throw;
+                    return;
                 }
-                pictureBoxImg.Image = drwAni.bmpRoad;
+                pictureBoxImg.Image = bmpMan.bmpRoad;
             }
         }
         private void UpdateTreeARM( Graph ARM, String algStr, TreeView tree )
@@ -243,8 +249,8 @@ namespace Proyecto_Integrador
         //Act 4
         private void BttnPrim_Click( object sender, EventArgs e )
         {
-            drwAni.bmpTree = new Bitmap(drwAni.bmpAnalyse);
-            alg = new Algorithms(myBmpProcess.GetLV());
+            bmpMan.bmpTree = new Bitmap(bmpMan.bmpAnalyse);
+            alg = new Algorithms(myBmpProcess.GetVerL());
             Vertex v = SelcetedOrgVer();
 
             try
@@ -258,8 +264,8 @@ namespace Proyecto_Integrador
             if(ARM_Prim != null)
             {
                 //Draw ARM
-                myBmpProcess.DrawARM(drwAni.bmpTree, ARM_Prim, new SolidBrush(Color.Orange));
-                pictureBoxImg.Image = drwAni.bmpTree;
+                myBmpProcess.DrawARM(bmpMan.bmpTree, ARM_Prim, new SolidBrush(Color.Orange));
+                pictureBoxImg.Image = bmpMan.bmpTree;
                 UpdateTreeARM(ARM_Prim, "PRIM: ", TreeViewPrim);
                 //bttn Enabled
                 bttnAnimatePrim.Enabled = true;
@@ -270,13 +276,13 @@ namespace Proyecto_Integrador
         {
             //ScanImage();
 
-            drwAni.bmpTree = new Bitmap(drwAni.bmpAnalyse);
-            alg = new Algorithms(myBmpProcess.GetLV());
+            bmpMan.bmpTree = new Bitmap(bmpMan.bmpAnalyse);
+            alg = new Algorithms(myBmpProcess.GetVerL());
 
             ARM_Kruskal = alg.Kruskal();
             //Draw ARM 
-            myBmpProcess.DrawARM(drwAni.bmpTree, ARM_Kruskal, new SolidBrush(Color.Orange));
-            pictureBoxImg.Image = drwAni.bmpTree;
+            myBmpProcess.DrawARM(bmpMan.bmpTree, ARM_Kruskal, new SolidBrush(Color.Orange));
+            pictureBoxImg.Image = bmpMan.bmpTree;
             UpdateTreeARM(ARM_Kruskal, "KRUSKAL: ", TreeViewKruskal);
             //bttn Enabled
             bttnAnimateKruskal.Enabled = true;
@@ -288,7 +294,7 @@ namespace Proyecto_Integrador
             new Thread(() => {
                 lock(this)
                 {
-                    myBmpProcess.AnimateARM(drwAni.bmpTree, ARM_Kruskal);
+                    myBmpProcess.AnimateARM(bmpMan.bmpTree, ARM_Kruskal);
                 }
             }).Start();
         }
@@ -299,7 +305,7 @@ namespace Proyecto_Integrador
             new Thread(() => {
                 lock(this)
                 {
-                    myBmpProcess.AnimateARM(drwAni.bmpTree, ARM_Prim);
+                    myBmpProcess.AnimateARM(bmpMan.bmpTree, ARM_Prim);
                 }
             }).Start();
         }
@@ -309,40 +315,59 @@ namespace Proyecto_Integrador
             {
                 try
                 {
-                    myBmpProcess.DrawARM(drwAni.bmpTree, ARM_Kruskal, new SolidBrush(Color.Red));
-                    myBmpProcess.DrawARM(drwAni.bmpTree, ARM_Prim, new SolidBrush(Color.Purple));
+                    myBmpProcess.DrawARM(bmpMan.bmpTree, ARM_Kruskal, new SolidBrush(Color.Red));
+                    myBmpProcess.DrawARM(bmpMan.bmpTree, ARM_Prim, new SolidBrush(Color.Purple));
                 } catch(Exception)
                 {
                     return;
                 }
-                pictureBoxImg.Image = drwAni.bmpTree;
+                pictureBoxImg.Image = bmpMan.bmpTree;
             }
         }
 
         //Act 5
         private void BttnAddPrey_Click( object sender, EventArgs e )
         {
+            Agent Prey;
             Vertex vOrg, vDes;
 
             vOrg = SelcetedOrgVer();
             vDes = SelectedDesVer();
 
-            agentL.Add(new Agent(vOrg, vDes, myBmpProcess.GetLV()));//Dijkstra
+            if(vOrg != null && vDes != null)
+            {
+                //Dijkstra
+                Prey = new Agent(vOrg, vDes, myBmpProcess.GetVerL());
+                agentL.Add(Prey);
 
-            bttnAddHunter.Enabled = true;
+                //Draw Prey
+                Bitmap bmpPrey = new Bitmap(bmpMan.bmpAnalyse);
+                myBmpProcess.DrawAgent(Prey.CurrPoint, bmpMan.purpleBrsh, bmpPrey);
+                pictureBoxImg.Image = bmpPrey;
+                pictureBoxImg.Refresh();
+
+                //Update Label
+                labelOrgDes.Text = "Org: " + Prey.Tree.VerL[0].GetId()
+                    + "   Des:" + Prey.Tree.VerL[Prey.Tree.VerL.Count - 1].GetId();
+                //Enable button Add hunter
+                bttnAddHunter.Enabled = true;
+            } else
+            {
+                MessageBox.Show("No se ha seleccionado origen/destino");
+            }
         }
         private void BttnAddHunter_Click( object sender, EventArgs e )
         {
             List<int> usedRanVer = new List<int>();
-            int totVer = myBmpProcess.GetLV().Count;
+            int totVer = myBmpProcess.GetVerL().Count;
             int ranVer;
 
             for(int i = 0; i < tbHunters.Value; i++)
             {
                 ranVer = NewNum(usedRanVer, totVer);
-                agentL.Add(new Agent(myBmpProcess.GetLV()[ranVer], myBmpProcess.GetLV()));//DFS
+                agentL.Add(new Agent(myBmpProcess.GetVerL()[ranVer], myBmpProcess.GetVerL()));//DFS
             }
-            myBmpProcess.AnimateAllAgents(drwAni.bmpAnalyse, agentL);
+            myBmpProcess.AnimateAllAgents(bmpMan.bmpAnalyse, agentL);
         }
 
         //Extras
@@ -361,6 +386,11 @@ namespace Proyecto_Integrador
         private void TrackBarNumVer_Scroll( object sender, EventArgs e )
         {
             labelNumVer.Text = tbNumVer.Value.ToString();
+        }
+
+        private void BttnBruFor_Click( object sender, EventArgs e )
+        {
+            myBmpProcess.ClosestPOP_BF(bmpMan.bmpAnalyse);
         }
 
         private void TbHunters_Scroll( object sender, EventArgs e )

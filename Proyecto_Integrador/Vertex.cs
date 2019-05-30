@@ -4,86 +4,79 @@ using System.Collections.Generic;
 
 namespace Proyecto_Integrador
 {
-	public class Vertex
-	{
-		int r;
-		int id;
-		Point p;
-		List<Edge> lA;
-		
-		public Vertex(Point p, int r, int id)
-		{
-			this.p = p;
-			this.r = r;
-			this.id = id;
-			lA = new List<Edge>();
-		}
-		
-		public void AddArista(Vertex origen, Vertex destino, double pond, int id, List<Point> lP)
-		{
-			lA.Add(new Edge(origen, destino, pond, id, lP));
-		}
-		
-		public List<Edge> getLA()
-		{
-			return lA;
-		}
-		
-		public void SetId(int id)
-		{
-			this.id = id;
-		}
-		
-		public void SetP(Point p){
-			this.p = p;
-		}
-		
-		public void SetR(int r){
-			this.r = r;
-		}
-		
-		public void SetLA(List<Edge> lA){
-			this.lA = lA;
-		}
-		
-		public int GetX()
-		{
-			return p.X;
-		}
-		
-		public int GetY()
-		{
-			return p.Y;
-		}
-		
-		public int GetR()
-		{
-			return r;
-		}
-		
-		public int GetId()
-		{
-			return id;
-		}
-		
-		public Point GetPoint()
-		{
-			return p;
-		}
-		
-		public override string ToString()
-		{
-			return string.Format("Vertice {0}", id);
-		}
+    public class Vertex
+    {
+        int r;
+        int id;
+        Point p;
+        public List<Edge> LA { get; set; }
 
-        public static bool operator != ( Vertex v_1, Vertex v_2 )
+        public Vertex( Point p, int r, int id )
         {
-            return v_1.id != v_2.id;
-        }
-        public static bool operator == ( Vertex v_1, Vertex v_2)
-        {
-            return v_1.id == v_2.id;
+            this.p = p;
+            this.r = r;
+            this.id = id;
+            LA = new List<Edge>();
         }
 
+        //public void AddArista( Vertex origen, Vertex destino, double pond, int id, List<Point> lP )
+        //{
+        //    LA.Add(new Edge(origen, destino, pond, id, lP));
+        //}
+
+        public List<Edge> GetLA()
+        {
+            return LA;
+        }
+
+        public void SetId( int id )
+        {
+            this.id = id;
+        }
+
+        public void SetP( Point p )
+        {
+            this.p = p;
+        }
+
+        public void SetR( int r )
+        {
+            this.r = r;
+        }
+
+        public void SetLA( List<Edge> lA )
+        {
+            this.LA = lA;
+        }
+
+        public int GetX()
+        {
+            return p.X;
+        }
+
+        public int GetY()
+        {
+            return p.Y;
+        }
+
+        public int GetR()
+        {
+            return r;
+        }
+
+        public int GetId()
+        {
+            return id;
+        }
+
+        public Point GetPoint()
+        {
+            return p;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Vertice {0}", id);
+        }
     }
 }

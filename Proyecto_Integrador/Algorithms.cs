@@ -21,7 +21,7 @@ namespace Proyecto_Integrador
             MyGraph = new Graph();
 
             foreach(Vertex cir in lV)
-                foreach(Edge ari in cir.getLA())
+                foreach(Edge ari in cir.GetLA())
                     if(!EdgesL.Contains(ari))
                         EdgesL.Add(ari);
         }
@@ -43,7 +43,7 @@ namespace Proyecto_Integrador
         public void DFS( Stack<Vertex> pila, HashSet<Vertex> visited, Graph g, List<Point> lP )
         {
             v_act = pila.Pop();
-            foreach(Edge e in v_act.getLA())
+            foreach(Edge e in v_act.GetLA())
             {
                 des = e.GetDestino();
                 if(!visited.Contains(des))
@@ -83,10 +83,10 @@ namespace Proyecto_Integrador
 
             u.DistAcu = 0;
             u.Definitivo = true;
-            
+
             while(!SolucionDij(DijEleL))//Todos no este definitivos
             {
-                foreach(Edge e in u.Ver.getLA())
+                foreach(Edge e in u.Ver.GetLA())
                 {
                     v = DijEleL.Find(x => x.Ver.GetId() == e.GetDestino().GetId());
 
@@ -98,32 +98,35 @@ namespace Proyecto_Integrador
                     }
 
                 }
-
                 u = MinDist(DijEleL);
                 u.Definitivo = true;
-
-                if(u.Ver.GetId() == des.GetId()) {
+                
+                if(u.Ver.GetId() == des.GetId())
+                {
                     break;
                 }
             }
 
             //Provenientes construir camino
             DijElemnt aux = u;//Des
+            List<Point> lPR;
             g.VerL.Add(aux.Ver);
 
-            while(aux.Ver != org)
+            while(aux.Ver.GetId() != org.GetId())
             {
-                foreach(Edge e in aux.Proveniente.getLA())
+                foreach(Edge e in aux.Proveniente.GetLA())
                 {
-                    if(aux.Ver == e.GetDestino())
+                    if(aux.Ver.GetId() == e.GetDestino().GetId())
                     {
-                        e.GetLP().Reverse();//Porque las aristas se van agregando del final al inicio
-                        lP.AddRange(e.GetLP());
+                        //e.GetLP().Reverse();//Porque las aristas se van agregando del final al inicio
+                        lPR = new List<Point>(e.GetLP());
+                        lPR.Reverse();
+                        lP.AddRange(lPR);
                         g.EdgL.Add(e);
                         break;
                     }
                 }
-                aux = DijEleL.Find(x => x.Ver == aux.Proveniente);
+                aux = DijEleL.Find(x => x.Ver.GetId() == aux.Proveniente.GetId());
                 g.VerL.Add(aux.Ver);
             }
 
@@ -133,13 +136,12 @@ namespace Proyecto_Integrador
 
         private bool SolucionDij( List<DijElemnt> dEL )
         {
-            bool flag = true;
             for(int i = 0; i < dEL.Count; i++)
             {
                 if(dEL[i].Definitivo == false)
-                    flag = false;
+                    return false;
             }
-            return flag;
+            return true;
         }
 
         public Graph Kruskal()
@@ -183,7 +185,7 @@ namespace Proyecto_Integrador
             {//O(n)
                 vVistitados.Add(vertex);
 
-                foreach(Edge a in vertex.getLA())//O(n)
+                foreach(Edge a in vertex.GetLA())//O(n)
                     aCandidatas.Add(a);
 
                 ariMin = SelecAriMin(aCandidatas, vVistitados);//O(n^2)

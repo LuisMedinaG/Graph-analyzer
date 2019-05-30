@@ -14,6 +14,7 @@ namespace Proyecto_Integrador
         public Graph Tree { get; set; }
         public List<Point> LP { get; set; }
 
+        public bool IsPrey { get; set; }
         public Point CurrPoint { get; set; }
         public Edge CurrEdge { get; set; }
 
@@ -21,6 +22,7 @@ namespace Proyecto_Integrador
         public Agent( Vertex vOrg, int id )
         {
             this.id = id;
+            IsPrey = false;
             bool creandoCamino = true;
             Vertex vOrgCpy = vOrg;
 
@@ -51,6 +53,7 @@ namespace Proyecto_Integrador
         //HUNTER
         public Agent( Vertex vOrg, List<Vertex> lV)
         {
+            IsPrey = false;
             alg = new Algorithms(lV);
             LP = new List<Point>();
             Tree = alg.DFS(vOrg, LP);//Points Are added here
@@ -64,6 +67,7 @@ namespace Proyecto_Integrador
         //PREY 
         public Agent( Vertex org, Vertex des, List<Vertex> lV )
         {
+            IsPrey = true;
             alg = new Algorithms(lV);
             LP = new List<Point>();
             Tree = alg.Dijsktra(org, des, LP);
@@ -78,7 +82,7 @@ namespace Proyecto_Integrador
         private Edge SeleccionaAristaAleatoria( Vertex v_origen )
         {
             int randAris;
-            List<Edge> lA = v_origen.getLA();
+            List<Edge> lA = v_origen.GetLA();
             List<Edge> candidates = new List<Edge>();
             for(int i = 0; i < lA.Count; i++)
             {

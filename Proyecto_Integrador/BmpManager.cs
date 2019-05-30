@@ -10,7 +10,7 @@ namespace Proyecto_Integrador
     public class BmpManager
     {
         public Bitmap bmpOrg, bmpAnalyse, bmpRoad, bmpTree;
-        public Brush whiteBrsh, blackBrsh, orangeBrsh;
+        public Brush whiteBrsh, blackBrsh, orangeBrsh, purpleBrsh;
         public PictureBox pbImg;
         public Graphics gBmp;
         public Color c;
@@ -25,7 +25,8 @@ namespace Proyecto_Integrador
             blackBrsh = new SolidBrush(Color.Black);
             whiteBrsh = new SolidBrush(Color.White);
             orangeBrsh = new SolidBrush(Color.Orange);
+            purpleBrsh = new SolidBrush(Color.Purple);
         }
-        
+
     }
 }
