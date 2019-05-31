@@ -92,7 +92,7 @@ namespace Proyecto_Integrador
             //DrawCenter(pCent);
             return tempCircle;
         }
-        public void ClosestPOP_BF( Bitmap bmp )
+        public void ClosestPoP_BF( Bitmap bmp )
         {
             double distMin, distAct;
             Vertex pOrg, pDes;
@@ -109,7 +109,7 @@ namespace Proyecto_Integrador
                 for(int i = 0; i < graph.VerL.Count; i++)
                 {
                     pOrg = graph.VerL[i];
-                    for(int j = i+1; j < graph.VerL.Count; j++)
+                    for(int j = i + 1; j < graph.VerL.Count; j++)
                     {
                         pDes = graph.VerL[j];
                         distAct = GetDist(pOrg, pDes);
@@ -122,7 +122,7 @@ namespace Proyecto_Integrador
                     }
                 }
                 //dibujar menor dis
-                gBmp.DrawLine(new Pen(Color.Pink, 3), pOrgM.GetX(), pOrgM.GetY(), pDesM.GetX(), pDesM.GetY()); 
+                gBmp.DrawLine(new Pen(Color.Pink, 3), pOrgM.GetX(), pOrgM.GetY(), pDesM.GetX(), pDesM.GetY());
             }
             pbImg.Refresh();
         }
@@ -157,7 +157,7 @@ namespace Proyecto_Integrador
                             e = new Edge(ori, des, distAct, ++contAris, lP);
                             ori.LA.Add(e);
 
-                            graph.EdgL.Add(e);//Optional
+                            graph.EdgL.AddLast(e);//Optional
 
                             lPR = new List<Point>(lP);
                             lPR.Reverse();
@@ -275,7 +275,7 @@ namespace Proyecto_Integrador
 
             if(graph.VerL.Count > 1)
             {
-                DeepAnimation(ARM.EdgL[0].GetOrigen(), visited, ARM);
+                DeepAnimation(ARM.EdgL.First.Value.GetOrigen(), visited, ARM);
             }
         }
 
@@ -285,9 +285,10 @@ namespace Proyecto_Integrador
             if(!visited.Contains(vertex))
             {
                 visited.Add(vertex);
-                for(int i = 0; i < Tree.EdgL.Count; ++i)
+                //for(int i = 0; i < Tree.EdgL.Count; ++i)
+                foreach(Edge edgeA in Tree.EdgL)
                 {
-                    Edge edgeA = Tree.EdgL[i];
+                    //Edge edgeA = Tree.EdgL[i];
                     if(vertex == edgeA.GetOrigen() && !visited.Contains(edgeA.GetDestino()))
                     {
                         AnimateEdge(bmpARM, edgeA.GetLP());
@@ -376,68 +377,75 @@ namespace Proyecto_Integrador
         //Act 5
         public void AnimateAllAgents( Bitmap bmp, List<Agent> agentL )
         {
-            bmpBack = new Bitmap(bmp);
-            pbImg.BackgroundImage = bmpBack;
+            pbImg.BackgroundImage = new Bitmap(bmp);
             pbImg.BackgroundImageLayout = ImageLayout.Zoom;
             pbImg.Image = bmp;
 
-            int j = 0, k = 0, i = 0;
-            Point currP, lastP;
+            Agent agn, agnDanger;
+            Point currP;
             Edge currE;
-            Agent agn;
+            int i = 0;
 
-            //TODO: Especificar la(s) presa(s)//
             while(agentL.Count > 0)
             {
-                j += 15;//Avanzo punto (+15)
-                k++;//Avanzo arista
-
-
                 for(i = 0; i < agentL.Count; i++)
                 {
                     agn = agentL[i];//Agente actual
-                    currE = agn.CurrEdge;//Arista actual
+                    currE = agn.CurrEdge.Value;//Arista actual
                     currP = agn.CurrPoint;//Punto actual
-                    lastP = currE.GetLP()[0];//Ultimi punto de esa arista
-                                             //^^^//
-                    brsh = orangeBrsh;
-                    if(currE.GetLP().Contains(lastP))//Punto en que se encuentra de la arista
+
+                    if(agn.CONT_P < agn.LP.Count)//Total de todos lo puntos del Grafo
                     {
-                        if(j < agn.LP.Count)//Total de todos lo puntos del Grafo
+                        if(!currE.GetLP().Contains(currP))//Punto en que se encuentra de la arista
                         {
-                            // [Checar (solo si presa) si choco con algun deprededor]
-                            // [Sacar distancia con depredador]
-                            // [Si no estoy en vertice, y dis es menor a diametro, destruir agente]
-                            agn.CurrPoint = agn.LP[j];//Tomo el siguiente punto en la lista
+                            if(!agn.IsPrey)
+                            {
+                                agn.CurrEdge = agn.CurrEdge.Next;//Hunter, Tomo la siguiente arista
+                            } else
+                            {agn.CurrEdge = agn.NextEdg();
+                            }
+                        }
+                        if(!agn.IsPrey)
+                        {
+                            agn.CurrPoint = agn.NextPoint();//Soy Cazador, Tomo el siguiente punto en la lista
                         } else
-                            agentL.Remove(agn);//Si llegue al final, elimino agente
+                        {
+                            agnDanger = agn.IsInDanger(agentL, currE);
+                            if(agnDanger == null)
+                            {
+                                agn.CurrPoint = agn.NextPoint();//Soy PRESA, Tomo el siguiente punto en la lista
+                            } else
+                            {
+                                if(agn.CONT_P - 10 > 0 && !agn.IsInVertex())
+                                {
+                                    agn.CONT_P -= 10;
+                                    agn.CurrPoint = agn.LP[agn.CONT_P];
+                                }
+                                if(agn.IsTouchingHunter(agnDanger))
+                                {
+                                    MessageBox.Show("Presa atrapada.");
+                                    agentL.Remove(agn);
+                                }
+                            }
+                        }
                     } else
                     {
-                        if(k < agn.Tree.EdgL.Count)//Total vertices Grafo
-                        {
-                            //  [Checar antes de avanzar si hay un depredaror en la sig arista]
-                            //      [Si no hay - Avanzar]
-                            agn.CurrEdge = agn.Tree.EdgL[k];//Tomo la siguiente arista
-                            //      [Si hay alguien - Regresarse]
-                        }
+                        MessageBox.Show("Fin recorrido.");
+                        agentL.Remove(agn);//Si llegue al final, elimino agente
                     }
-                    if(agn.IsPrey)
-                        brsh = purpleBrsh;
-                    if(j - 1 < agn.LP.Count)//Si el sig punto no sale de los indices
-                        DrawAgent(agn.LP[j - 1], whiteBrsh, bmp);
+
+                    brsh = agn.IsPrey ? purpleBrsh : orangeBrsh;
+
+                    if(agn.CurrPoint != agn.LP[agn.LP.Count - 1])//Si el sig punto no sale de los indices
+                        DrawAgent(new Point(agn.CurrPoint.X - 1, agn.CurrPoint.Y - 1), whiteBrsh, bmp);
                     DrawAgent(agn.CurrPoint, brsh, bmp);
                 }
 
-                pbImg.Refresh();
+                pbImg.Refresh();//**** ¡Elimina el bmp! ****//
                 ClearBitmap(bmp);
             }
         }
-        private bool IsInVertex( Agent agn )
-        {
 
-            return true;
-        }
-        
         //Drawing func.
         private void DrawCircle( Vertex cir, Bitmap bmp, Brush brush )
         {
@@ -554,6 +562,12 @@ namespace Proyecto_Integrador
         {
             int distX = Math.Abs((ini.GetX() - fin.GetX()));
             int distY = Math.Abs((ini.GetY() - fin.GetY()));
+            return Math.Sqrt(Math.Pow(distX, 2) + Math.Pow(distY, 2));
+        }
+        public double GetDist( Point ini, Point fin )
+        {
+            int distX = Math.Abs((ini.X - fin.X));
+            int distY = Math.Abs((ini.Y - fin.Y));
             return Math.Sqrt(Math.Pow(distX, 2) + Math.Pow(distY, 2));
         }
     }

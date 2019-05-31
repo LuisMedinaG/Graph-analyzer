@@ -8,11 +8,13 @@ namespace Proyecto_Integrador
 {
     public partial class MainForm : Form
     {
+
         BmpProcessor myBmpProcess;
         Random rand;
         Algorithms alg;
         List<Agent> lAgents;
         List<Agent> agentL;
+        List<int> usedRanVer;
 
         Graph ARM_Prim, ARM_Kruskal;
         BmpManager bmpMan;
@@ -21,6 +23,7 @@ namespace Proyecto_Integrador
         public MainForm()
         {
             InitializeComponent();
+            CheckForIllegalCrossThreadCalls = false;//Threads Warnig (Ilegal Cross) [OFF]
             DisableAllBttns();
             bmpMan = new BmpManager();
         }
@@ -65,6 +68,7 @@ namespace Proyecto_Integrador
         }
         private void ScanImage()
         {
+            usedRanVer = new List<int>();
             agentL = new List<Agent>();//<-----
             bmpMan.bmpAnalyse = new Bitmap(bmpMan.bmpOrg);
             myBmpProcess = new BmpProcessor(bmpMan.bmpAnalyse, pictureBoxImg);
@@ -78,6 +82,7 @@ namespace Proyecto_Integrador
             tbHunters.Maximum = myBmpProcess.GetVerL().Count;
 
             cbInitialVertex.Items.Clear();
+            cbDestinationVertex.Items.Clear();
             foreach(Vertex v in myBmpProcess.GetVerL())
             {
                 cbInitialVertex.Items.Add(v.GetId());
@@ -238,10 +243,10 @@ namespace Proyecto_Integrador
             tree.Nodes.Add(algStr);
 
             tree.Nodes[0].Nodes.Add("Orden de aceptacion");
-            for(int i = 0; i < ARM.EdgL.Count; i++)
+            foreach(Edge e in ARM.EdgL)
             {
-                tree.Nodes[0].Nodes.Add(i + 1 + ")  " + ARM.EdgL[i].ToTree());
-                aW += ARM.EdgL[i].GetPonderacion();
+                tree.Nodes[0].Nodes.Add(e.GetId() + 1 + ")  " + e.ToTree());
+                aW += e.GetPonderacion();
             }
             tree.Nodes[0].Nodes.Add("Peso acumulado: " + String.Format("{0:0.00}", aW));
         }
@@ -334,11 +339,15 @@ namespace Proyecto_Integrador
             vOrg = SelcetedOrgVer();
             vDes = SelectedDesVer();
 
+            usedRanVer.Clear();
+
             if(vOrg != null && vDes != null)
             {
                 //Dijkstra
-                Prey = new Agent(vOrg, vDes, myBmpProcess.GetVerL());
+                Prey = new Agent(vOrg, vDes, myBmpProcess.GetVerL(), agentL.Count);
+                //Add to agentList
                 agentL.Add(Prey);
+                usedRanVer.Add(vOrg.GetId());//Agregar a la lista de numeros Aletorios
 
                 //Draw Prey
                 Bitmap bmpPrey = new Bitmap(bmpMan.bmpAnalyse);
@@ -358,16 +367,43 @@ namespace Proyecto_Integrador
         }
         private void BttnAddHunter_Click( object sender, EventArgs e )
         {
-            List<int> usedRanVer = new List<int>();
             int totVer = myBmpProcess.GetVerL().Count;
             int ranVer;
 
             for(int i = 0; i < tbHunters.Value; i++)
             {
+                Thread.Sleep(127);
                 ranVer = NewNum(usedRanVer, totVer);
-                agentL.Add(new Agent(myBmpProcess.GetVerL()[ranVer], myBmpProcess.GetVerL()));//DFS
+                agentL.Add(new Agent(myBmpProcess.GetVerL()[ranVer], myBmpProcess.GetVerL(), agentL.Count));//DFS
             }
-            myBmpProcess.AnimateAllAgents(bmpMan.bmpAnalyse, agentL);
+            //Thread thr = new Thread(() => {
+                myBmpProcess.AnimateAllAgents(bmpMan.bmpAnalyse, agentL);
+            //});
+            //thr.Start();
+        }
+
+        //Act 6
+        private void BttnBruFor_Click( object sender, EventArgs e )
+        {
+            //Inicio tiempo
+            // var tiempo
+            myBmpProcess.ClosestPoP_BF(bmpMan.bmpAnalyse);
+            //Fin tiempo
+            labelTBF.Text = "0.0005 ms";
+        }
+        private void BttnDivCon_Click( object sender, EventArgs e )
+        {
+            //Inicio tiempo
+            // var tiempo
+            //myBmpProcess.ClosestPoP_DC(bmpMan.bmpAnalyse);
+            //Fin tiempo
+            labelTDC.Text = "0.0001 ms";
+        }
+
+        //Proy. Integrador
+        private void BttnFinBFS_Click( object sender, EventArgs e )
+        {
+            //myBmpProcess.Find_BFS(bmpMan.bmpAnalyse);
         }
 
         //Extras
@@ -387,12 +423,6 @@ namespace Proyecto_Integrador
         {
             labelNumVer.Text = tbNumVer.Value.ToString();
         }
-
-        private void BttnBruFor_Click( object sender, EventArgs e )
-        {
-            myBmpProcess.ClosestPOP_BF(bmpMan.bmpAnalyse);
-        }
-
         private void TbHunters_Scroll( object sender, EventArgs e )
         {
             labelHunters.Text = tbHunters.Value.ToString();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace Proyecto_Integrador
 {
@@ -14,13 +15,16 @@ namespace Proyecto_Integrador
         public Graph Tree { get; set; }
         public List<Point> LP { get; set; }
 
+        public int CONT_P { get; set; }
         public bool IsPrey { get; set; }
+
         public Point CurrPoint { get; set; }
-        public Edge CurrEdge { get; set; }
+        public LinkedListNode<Edge> CurrEdge { get; set; }
 
         //Random Path Agent
         public Agent( Vertex vOrg, int id )
         {
+            CONT_P = 0;
             this.id = id;
             IsPrey = false;
             bool creandoCamino = true;
@@ -51,8 +55,10 @@ namespace Proyecto_Integrador
             }
         }
         //HUNTER
-        public Agent( Vertex vOrg, List<Vertex> lV)
+        public Agent( Vertex vOrg, List<Vertex> lV, int id_H )
         {
+            id = id_H;
+            CONT_P = 0;
             IsPrey = false;
             alg = new Algorithms(lV);
             LP = new List<Point>();
@@ -61,12 +67,14 @@ namespace Proyecto_Integrador
             if(Tree.EdgL.Count > 0)
             {
                 CurrPoint = LP[0];//First point
-                CurrEdge = Tree.EdgL[0];//First edge
+                CurrEdge = Tree.EdgL.First;//First edge
             }
         }
         //PREY 
-        public Agent( Vertex org, Vertex des, List<Vertex> lV )
+        public Agent( Vertex org, Vertex des, List<Vertex> lV, int id_P )
         {
+            id = id_P;
+            CONT_P = 0;
             IsPrey = true;
             alg = new Algorithms(lV);
             LP = new List<Point>();
@@ -75,7 +83,7 @@ namespace Proyecto_Integrador
             if(Tree.EdgL.Count > 0)
             {
                 CurrPoint = LP[0];//First point
-                CurrEdge = Tree.EdgL[0];//First edge
+                CurrEdge = Tree.EdgL.First;//First edge
             }
         }
 
@@ -133,6 +141,67 @@ namespace Proyecto_Integrador
         public double GetDistAcu()
         {
             return DistAcu;
+        }
+
+        public LinkedListNode<Edge> NextEdg()
+        {
+            return CurrEdge.Next;
+        }
+        public Point NextPoint()
+        {
+            CONT_P += 10;
+            if(CONT_P < LP.Count - 2)
+            {
+                return LP[CONT_P];
+            }
+            return LP[LP.Count - 1];
+        }
+        public Agent IsInDanger( List<Agent> agentL, Edge edg )
+        {
+            foreach(Agent hun in agentL)
+            {
+                //if(hun.CurrEdge.Value == edg && !hun.IsPrey)
+                if(SameEdge(hun.CurrEdge.Value, edg) && !hun.IsPrey)
+                {
+                    return hun;
+                }
+            }
+            return null;
+        }
+        public bool IsInVertex()
+        {
+            Edge e = this.CurrEdge.Value;
+            Point p = this.CurrPoint;
+            Point pOrg = e.GetOrigen().GetPoint();
+            Point pDes = e.GetDestino().GetPoint();
+
+            double distOrg = GetDist(p, pOrg);
+            double distDes = GetDist(p, pDes);
+
+            return (distDes < e.GetDestino().GetR() || distOrg < e.GetOrigen().GetR());
+        }
+        public bool IsTouchingHunter( Agent agnDanger )
+        {
+            return GetDist(CurrPoint, agnDanger.CurrPoint) < 30 && !IsInVertex();
+        }
+
+        public bool SameEdge( Edge e_1, Edge e_2 )
+        {
+            if(e_1.GetDestino() == e_2.GetDestino() && e_1.GetOrigen() == e_2.GetOrigen())
+            {
+                return true;
+            }
+            if(e_1.GetDestino() == e_2.GetOrigen() && e_1.GetOrigen() == e_2.GetDestino())
+            {
+                return true;
+            }
+            return false;
+        }
+        public double GetDist( Point ini, Point fin )
+        {
+            int distX = Math.Abs((ini.X - fin.X));
+            int distY = Math.Abs((ini.Y - fin.Y));
+            return Math.Sqrt(Math.Pow(distX, 2) + Math.Pow(distY, 2));
         }
     }
 }

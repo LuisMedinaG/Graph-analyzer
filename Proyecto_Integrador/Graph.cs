@@ -8,13 +8,13 @@ namespace Proyecto_Integrador
     public class Graph
     {
         private List<Vertex> lVer;
-        private List<Edge> lEdg;
+        private LinkedList<Edge> lEdg;
 
         public Graph() {
             lVer = new List<Vertex>();
-            lEdg = new List<Edge>();
+            lEdg = new LinkedList<Edge>();
         }
-        public Graph( List<Vertex> lVer, List<Edge> lEdg)
+        public Graph( List<Vertex> lVer, LinkedList<Edge> lEdg)
         {
             this.lVer = lVer;
             this.lEdg = lEdg;
@@ -25,7 +25,7 @@ namespace Proyecto_Integrador
             set { lVer = value; }
         }
 
-        public List<Edge> EdgL {
+        public LinkedList<Edge> EdgL {
             get { return lEdg; }
             set { lEdg = value; }
         }

@@ -40,7 +40,7 @@ namespace Proyecto_Integrador
             DFS(pila, visitados, MyGraph, lP);
             return MyGraph;
         }
-        public void DFS( Stack<Vertex> pila, HashSet<Vertex> visited, Graph g, List<Point> lP )
+        public void DFS( Stack<Vertex> pila, HashSet<Vertex> visited, Graph G, List<Point> lP )
         {
             v_act = pila.Pop();
             foreach(Edge e in v_act.GetLA())
@@ -48,21 +48,21 @@ namespace Proyecto_Integrador
                 des = e.GetDestino();
                 if(!visited.Contains(des))
                 {
-                    g.VerL.Add(des);
-                    if(!g.EdgL.Contains(e))
-                        g.EdgL.Add(e);
-
                     visited.Add(des);
                     pila.Push(des);
+
+                    G.VerL.Add(des);
+                    G.EdgL.AddLast(e);
 
                     lPR = e.GetLP();
                     lP.AddRange(e.GetLP());
 
-                    DFS(pila, visited, g, lP);
+                    DFS(pila, visited, G, lP);
 
                     lPR = new List<Point>(e.GetLP());
                     lPR.Reverse();
                     lP.AddRange(lPR);
+                    G.EdgL.AddLast(new Edge(e.GetDestino(), e.GetOrigen(), e.GetPonderacion(), e.GetId(), lPR));
                 }
             }
         }
@@ -100,7 +100,7 @@ namespace Proyecto_Integrador
                 }
                 u = MinDist(DijEleL);
                 u.Definitivo = true;
-                
+
                 if(u.Ver.GetId() == des.GetId())
                 {
                     break;
@@ -122,7 +122,8 @@ namespace Proyecto_Integrador
                         lPR = new List<Point>(e.GetLP());
                         lPR.Reverse();
                         lP.AddRange(lPR);
-                        g.EdgL.Add(e);
+                        //Tree
+                        g.EdgL.AddFirst(e);//Añade al PRINCIPIO
                         break;
                     }
                 }
@@ -167,7 +168,7 @@ namespace Proyecto_Integrador
                 if(!Same(a_1, a_2, link))
                 {
                     Unite(a_1, a_2, link, size);
-                    MyGraph.EdgL.Add(edge);
+                    MyGraph.EdgL.AddLast(edge);
                 }
             }
             return MyGraph;
@@ -181,18 +182,21 @@ namespace Proyecto_Integrador
             var aCandidatas = new List<Edge>();
             var vVistitados = new List<Vertex>();
 
-            while(MyGraph.VerL.Count < numOfVer - 1)
-            {//O(n)
-                vVistitados.Add(vertex);
+            MyGraph = new Graph();
 
-                foreach(Edge a in vertex.GetLA())//O(n)
+            while(MyGraph.VerL.Count < numOfVer - 1)
+            {
+                vVistitados.Add(vertex);
+                MyGraph.VerL.Add(vertex);
+
+                foreach(Edge a in vertex.GetLA())
                     aCandidatas.Add(a);
 
-                ariMin = SelecAriMin(aCandidatas, vVistitados);//O(n^2)
+                ariMin = SelecAriMin(aCandidatas, vVistitados);
 
                 vertex = ariMin.GetDestino();
                 aCandidatas.Remove(ariMin);
-                MyGraph.EdgL.Add(ariMin);
+                MyGraph.EdgL.AddLast(ariMin);
             }
             return MyGraph;
         }
@@ -241,13 +245,13 @@ namespace Proyecto_Integrador
         }
         private Edge SelecAriMin( List<Edge> aCandidatas, List<Vertex> vVistitados )
         {
-            Edge ariMin = new Edge(null, null, int.MaxValue, -1, null);
+            Edge ariMin = new Edge(null, null, double.MaxValue, -1, null);
 
-            foreach(Edge a in aCandidatas)
+            foreach(Edge e in aCandidatas)
             {
-                if(!vVistitados.Contains(a.GetDestino()))
-                    if(a.GetPonderacion() < ariMin.GetPonderacion())
-                        ariMin = a;
+                if(!vVistitados.Contains(e.GetDestino()))
+                    if(e.GetPonderacion() < ariMin.GetPonderacion())
+                        ariMin = e;
             }
             return ariMin;
 

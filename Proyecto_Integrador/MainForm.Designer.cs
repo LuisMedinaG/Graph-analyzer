@@ -80,6 +80,9 @@ namespace Proyecto_Integrador
             this.bttnBruFor = new System.Windows.Forms.Button();
             this.bttnDivCon = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
+            this.labelTDC = new System.Windows.Forms.Label();
+            this.labelTBF = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxImg)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbNumVer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbHunters)).BeginInit();
@@ -340,9 +343,9 @@ namespace Proyecto_Integrador
             // labelHunters
             // 
             this.labelHunters.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelHunters.Location = new System.Drawing.Point(1044, 403);
+            this.labelHunters.Location = new System.Drawing.Point(1046, 403);
             this.labelHunters.Name = "labelHunters";
-            this.labelHunters.Size = new System.Drawing.Size(24, 45);
+            this.labelHunters.Size = new System.Drawing.Size(22, 34);
             this.labelHunters.TabIndex = 29;
             this.labelHunters.Text = "0";
             this.labelHunters.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -391,9 +394,9 @@ namespace Proyecto_Integrador
             // labelOrgDes
             // 
             this.labelOrgDes.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelOrgDes.Location = new System.Drawing.Point(936, 346);
+            this.labelOrgDes.Location = new System.Drawing.Point(940, 365);
             this.labelOrgDes.Name = "labelOrgDes";
-            this.labelOrgDes.Size = new System.Drawing.Size(132, 48);
+            this.labelOrgDes.Size = new System.Drawing.Size(128, 29);
             this.labelOrgDes.TabIndex = 32;
             this.labelOrgDes.Text = "Orig:      Des:  ";
             this.labelOrgDes.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -401,17 +404,18 @@ namespace Proyecto_Integrador
             // bttnFinBFS
             // 
             this.bttnFinBFS.Font = new System.Drawing.Font("Calibri Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bttnFinBFS.Location = new System.Drawing.Point(940, 554);
+            this.bttnFinBFS.Location = new System.Drawing.Point(940, 570);
             this.bttnFinBFS.Name = "bttnFinBFS";
-            this.bttnFinBFS.Size = new System.Drawing.Size(264, 48);
+            this.bttnFinBFS.Size = new System.Drawing.Size(264, 32);
             this.bttnFinBFS.TabIndex = 33;
             this.bttnFinBFS.Text = "Find";
             this.bttnFinBFS.UseVisualStyleBackColor = true;
+            this.bttnFinBFS.Click += new System.EventHandler(this.BttnFinBFS_Click);
             // 
             // label4
             // 
             this.label4.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(941, 528);
+            this.label4.Location = new System.Drawing.Point(941, 544);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(263, 23);
             this.label4.TabIndex = 34;
@@ -421,9 +425,9 @@ namespace Proyecto_Integrador
             // bttnBruFor
             // 
             this.bttnBruFor.Font = new System.Drawing.Font("Calibri Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bttnBruFor.Location = new System.Drawing.Point(1075, 477);
+            this.bttnBruFor.Location = new System.Drawing.Point(940, 477);
             this.bttnBruFor.Name = "bttnBruFor";
-            this.bttnBruFor.Size = new System.Drawing.Size(127, 48);
+            this.bttnBruFor.Size = new System.Drawing.Size(129, 45);
             this.bttnBruFor.TabIndex = 35;
             this.bttnBruFor.Text = "Brute Force";
             this.bttnBruFor.UseVisualStyleBackColor = true;
@@ -432,12 +436,13 @@ namespace Proyecto_Integrador
             // bttnDivCon
             // 
             this.bttnDivCon.Font = new System.Drawing.Font("Calibri Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bttnDivCon.Location = new System.Drawing.Point(939, 477);
+            this.bttnDivCon.Location = new System.Drawing.Point(1077, 477);
             this.bttnDivCon.Name = "bttnDivCon";
-            this.bttnDivCon.Size = new System.Drawing.Size(127, 48);
+            this.bttnDivCon.Size = new System.Drawing.Size(124, 45);
             this.bttnDivCon.TabIndex = 36;
             this.bttnDivCon.Text = "Divide and Conquer";
             this.bttnDivCon.UseVisualStyleBackColor = true;
+            this.bttnDivCon.Click += new System.EventHandler(this.BttnDivCon_Click);
             // 
             // label8
             // 
@@ -449,10 +454,43 @@ namespace Proyecto_Integrador
             this.label8.Text = "Closest pair of points";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // labelTDC
+            // 
+            this.labelTDC.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTDC.Location = new System.Drawing.Point(1077, 525);
+            this.labelTDC.Name = "labelTDC";
+            this.labelTDC.Size = new System.Drawing.Size(124, 19);
+            this.labelTDC.TabIndex = 38;
+            this.labelTDC.Text = "0";
+            this.labelTDC.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // labelTBF
+            // 
+            this.labelTBF.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTBF.Location = new System.Drawing.Point(940, 525);
+            this.labelTBF.Name = "labelTBF";
+            this.labelTBF.Size = new System.Drawing.Size(128, 19);
+            this.labelTBF.TabIndex = 39;
+            this.labelTBF.Text = "0";
+            this.labelTBF.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(941, 343);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(123, 23);
+            this.label1.TabIndex = 40;
+            this.label1.Text = "New";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1216, 614);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.labelTBF);
+            this.Controls.Add(this.labelTDC);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.bttnDivCon);
             this.Controls.Add(this.bttnBruFor);
@@ -530,5 +568,8 @@ namespace Proyecto_Integrador
         private System.Windows.Forms.Button bttnBruFor;
         private System.Windows.Forms.Button bttnDivCon;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label labelTDC;
+        private System.Windows.Forms.Label labelTBF;
+        private System.Windows.Forms.Label label1;
     }
 }
