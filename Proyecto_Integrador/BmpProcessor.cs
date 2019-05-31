@@ -414,6 +414,27 @@ namespace Proyecto_Integrador
             }
         }
 
+        public void Find_BFS( Bitmap bmp )
+        {
+            Graph Tree;
+            List<Point> lP;
+            Algorithms alg = new Algorithms(graph.VerL);
+
+            foreach(Vertex v in graph.VerL)
+            {
+                lP = new List<Point>();
+                Tree = alg.DFS(v, lP);
+
+                if(alg.SameHeightTree(Tree) == true)
+                {
+                    DrawARM(bmp, Tree, orangeBrsh);
+                } else
+                {
+                    MessageBox.Show("No se encontro arbol");
+                }
+            }
+        }
+
         //Act 6
         public void CloPoi_BruteForce( Bitmap bmp )
         {
@@ -474,7 +495,7 @@ namespace Proyecto_Integrador
         }
         private List<Vertex> CloPoi_DivideConquer( List<Vertex> VerL, int beg, int end )
         {
-            if(VerL.Count <= 4)
+            if(VerL.Count <= 3)
             {
                 return CloPoi_BruteForce(VerL, VerL.Count);
             }
@@ -502,7 +523,6 @@ namespace Proyecto_Integrador
 
             return minDist < minDistStrip ? pL_Min : pL_Strip;
         }
-
         private List<Vertex> StripClosest( List<Vertex> stripL, int size, double minDist )
         {
             double min = minDist;

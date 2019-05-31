@@ -256,5 +256,11 @@ namespace Proyecto_Integrador
             return ariMin;
 
         }
+
+        public bool SameHeightTree( Graph tree )
+        {
+
+            return false;
+        }
     }
 }

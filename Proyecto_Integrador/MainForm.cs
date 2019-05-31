@@ -405,7 +405,7 @@ namespace Proyecto_Integrador
         //Proy. Integrador
         private void BttnFinBFS_Click( object sender, EventArgs e )
         {
-            //myBmpProcess.Find_BFS(bmpMan.bmpAnalyse);
+            myBmpProcess.Find_BFS(bmpMan.bmpAnalyse);
         }
 
         //Extras
