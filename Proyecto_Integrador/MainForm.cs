@@ -385,19 +385,21 @@ namespace Proyecto_Integrador
         //Act 6
         private void BttnBruFor_Click( object sender, EventArgs e )
         {
-            //Inicio tiempo
-            // var tiempo
-            myBmpProcess.ClosestPoP_BF(bmpMan.bmpAnalyse);
-            //Fin tiempo
-            labelTBF.Text = "0.0005 ms";
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+            myBmpProcess.CloPoi_BruteForce(bmpMan.bmpAnalyse);//Process
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
+
+            labelTBF.Text = String.Format("{0:0.00} ms", elapsedMs);
         }
         private void BttnDivCon_Click( object sender, EventArgs e )
         {
-            //Inicio tiempo
-            // var tiempo
-            //myBmpProcess.ClosestPoP_DC(bmpMan.bmpAnalyse);
-            //Fin tiempo
-            labelTDC.Text = "0.0001 ms";
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+            myBmpProcess.CloPoi_DivideConquer(bmpMan.bmpAnalyse);
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
+
+            labelTDC.Text = String.Format("{0:0.00} ms", elapsedMs);
         }
 
         //Proy. Integrador

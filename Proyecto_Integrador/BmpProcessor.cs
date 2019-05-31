@@ -92,40 +92,6 @@ namespace Proyecto_Integrador
             //DrawCenter(pCent);
             return tempCircle;
         }
-        public void ClosestPoP_BF( Bitmap bmp )
-        {
-            double distMin, distAct;
-            Vertex pOrg, pDes;
-            Vertex pOrgM, pDesM;
-
-            gBmp = Graphics.FromImage(bmp);
-            if(graph.VerL.Count > 1)
-            {
-                pOrgM = graph.VerL[0];
-                pDesM = graph.VerL[1];
-
-                distMin = GetDist(pOrgM, pDesM);
-
-                for(int i = 0; i < graph.VerL.Count; i++)
-                {
-                    pOrg = graph.VerL[i];
-                    for(int j = i + 1; j < graph.VerL.Count; j++)
-                    {
-                        pDes = graph.VerL[j];
-                        distAct = GetDist(pOrg, pDes);
-                        if(distAct < distMin /*&& distAct != 0*/)
-                        {
-                            pOrgM = pOrg;
-                            pDesM = pDes;
-                            distMin = distAct;
-                        }
-                    }
-                }
-                //dibujar menor dis
-                gBmp.DrawLine(new Pen(Color.Pink, 3), pOrgM.GetX(), pOrgM.GetY(), pDesM.GetX(), pDesM.GetY());
-            }
-            pbImg.Refresh();
-        }
 
         //Act 2
         private void FindObstacles( Bitmap bmp )
@@ -402,7 +368,8 @@ namespace Proyecto_Integrador
                             {
                                 agn.CurrEdge = agn.CurrEdge.Next;//Hunter, Tomo la siguiente arista
                             } else
-                            {agn.CurrEdge = agn.NextEdg();
+                            {
+                                agn.CurrEdge = agn.NextEdg();
                             }
                         }
                         if(!agn.IsPrey)
@@ -431,6 +398,8 @@ namespace Proyecto_Integrador
                     } else
                     {
                         MessageBox.Show("Fin recorrido.");
+                        if(agn.IsPrey)
+                            return;
                         agentL.Remove(agn);//Si llegue al final, elimino agente
                     }
 
@@ -440,10 +409,123 @@ namespace Proyecto_Integrador
                         DrawAgent(new Point(agn.CurrPoint.X - 1, agn.CurrPoint.Y - 1), whiteBrsh, bmp);
                     DrawAgent(agn.CurrPoint, brsh, bmp);
                 }
-
                 pbImg.Refresh();//**** ¡Elimina el bmp! ****//
                 ClearBitmap(bmp);
             }
+        }
+
+        //Act 6
+        public void CloPoi_BruteForce( Bitmap bmp )
+        {
+            Vertex pOrgM, pDesM;
+
+            gBmp = Graphics.FromImage(bmp);
+            if(graph.VerL.Count > 1)
+            {
+                var pL = CloPoi_BruteForce(graph.VerL, graph.VerL.Count);
+                pOrgM = pL[0];
+                pDesM = pL[1];
+                //dibujar menor dis
+                gBmp.DrawLine(new Pen(Color.Pink, 3), pOrgM.GetX(), pOrgM.GetY(), pDesM.GetX(), pDesM.GetY());
+            }
+            pbImg.Refresh();
+        }
+        public void CloPoi_DivideConquer( Bitmap bmp )
+        {
+            var VerL = graph.VerL;
+            gBmp = Graphics.FromImage(bmp);
+
+            VerL.Sort(( x, y ) => x.GetX().CompareTo(y.GetX()));//Sort in X
+
+            var pL = CloPoi_DivideConquer(VerL, 0, VerL.Count - 1);
+
+            gBmp.DrawLine(new Pen(Color.Pink, 3), pL[0].GetX(), pL[0].GetY(), pL[1].GetX(), pL[1].GetY());
+            pbImg.Refresh();
+        }
+        private List<Vertex> CloPoi_BruteForce( List<Vertex> VerL, int n )
+        {
+            double distMin, distAct;
+            Vertex pOrg, pDes;
+            Vertex pOrgM, pDesM;
+
+            pOrgM = VerL[0];
+            pDesM = VerL[1];
+            distMin = double.MaxValue;
+            for(int i = 0; i < n; i++)
+            {
+                for(int j = i + 1; j < n; j++)
+                {
+                    pOrg = VerL[i];
+                    pDes = VerL[j];
+                    distAct = GetDist(pOrg, pDes);
+                    if(distAct < distMin)
+                    {
+                        pOrgM = pOrg;
+                        pDesM = pDes;
+                        distMin = distAct;
+                    }
+                }
+            }
+            var pL = new List<Vertex>() {
+                pOrgM,
+                pDesM
+            };
+            return pL;
+        }
+        private List<Vertex> CloPoi_DivideConquer( List<Vertex> VerL, int beg, int end )
+        {
+            if(VerL.Count <= 4)
+            {
+                return CloPoi_BruteForce(VerL, VerL.Count);
+            }
+            int mid = VerL.Count / 2;
+            Point mP = VerL[mid].GetPoint();
+
+            var midArr_L = VerL.GetRange(0, mid);
+            var midArr_R = VerL.GetRange(mid, mid);
+            var pL_L = CloPoi_DivideConquer(midArr_L, beg, mid);
+            var pL_R = CloPoi_DivideConquer(midArr_R, mid, end);
+
+            double distPL_L = GetDist(pL_L[0], pL_L[1]);
+            double distPL_R = GetDist(pL_R[0], pL_R[1]);
+
+            double minDist = distPL_L < distPL_R ? distPL_L : distPL_R;
+            var pL_Min = distPL_L < distPL_R ? pL_L : pL_R;
+
+            var stripL = new List<Point>();
+            for(int i = 0; i < VerL.Count; i++)
+                if(Abs(VerL[i].GetPoint().X - mP.X) < minDist)
+                    stripL.Add(VerL[i].GetPoint());
+
+            var pL_Strip = StripClosest(VerL, stripL.Count, minDist);
+            double minDistStrip = GetDist(pL_Strip[0], pL_Strip[1]);
+
+            return minDist < minDistStrip ? pL_Min : pL_Strip;
+        }
+
+        private List<Vertex> StripClosest( List<Vertex> stripL, int size, double minDist )
+        {
+            double min = minDist;
+            Vertex pOrgM, pDesM;
+            pOrgM = stripL[0];
+            pDesM = stripL[1];
+
+            stripL.Sort(( x, y ) => x.GetY().CompareTo(y.GetY()));
+
+            for(int i = 0; i < size; ++i)
+                for(int j = i + 1; j < size && (stripL[j].GetPoint().Y - stripL[i].GetPoint().Y) < min; ++j)
+                    if(GetDist(stripL[i], stripL[j]) < min)
+                    {
+                        min = GetDist(stripL[i], stripL[j]);
+                        pOrgM = stripL[i];
+                        pDesM = stripL[j];
+                    }
+
+            var pL = new List<Vertex>() {
+                pOrgM,
+                pDesM
+            };
+            return pL;
         }
 
         //Drawing func.
