@@ -160,8 +160,8 @@ namespace Proyecto_Integrador
         {
             foreach(Agent hun in agentL)
             {
-                //if(hun.CurrEdge.Value == edg && !hun.IsPrey)
-                if(SameEdge(hun.CurrEdge.Value, edg) && !hun.IsPrey)
+                //if(SameEdge(hun.CurrEdge.Value, edg) && !hun.IsPrey)
+                if(hun.CurrEdge.Value.GetDestino() == this.CurrEdge.Value.GetOrigen() && !hun.IsPrey)
                 {
                     return hun;
                 }

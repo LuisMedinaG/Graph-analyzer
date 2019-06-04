@@ -50,6 +50,7 @@ namespace Proyecto_Integrador
             //Act 6
             bttnBruFor.Enabled = false;
             bttnDivCon.Enabled = false;
+            bttnFinBFS.Enabled = false;
         }
         private void UpdateTreeView()
         {
@@ -100,6 +101,7 @@ namespace Proyecto_Integrador
                 bttnAddPrey.Enabled = true;
                 bttnBruFor.Enabled = true;
                 bttnDivCon.Enabled = true;
+                bttnFinBFS.Enabled = true;
             }
         }
 
@@ -236,19 +238,19 @@ namespace Proyecto_Integrador
                 pictureBoxImg.Image = bmpMan.bmpRoad;
             }
         }
-        private void UpdateTreeARM( Graph ARM, String algStr, TreeView tree )
+        private void UpdateTreeARM( Graph ARM, String algStr, TreeView tV )
         {
             double aW = 0;
-            tree.Nodes.Clear();
-            tree.Nodes.Add(algStr);
+            tV.Nodes.Clear();
+            tV.Nodes.Add(algStr);
 
-            tree.Nodes[0].Nodes.Add("Orden de aceptacion");
+            tV.Nodes[0].Nodes.Add("Orden de aceptacion");
             foreach(Edge e in ARM.EdgL)
             {
-                tree.Nodes[0].Nodes.Add(e.GetId() + 1 + ")  " + e.ToTree());
+                tV.Nodes[0].Nodes.Add(e.GetId() + 1 + ")  " + e.ToTree());
                 aW += e.GetPonderacion();
             }
-            tree.Nodes[0].Nodes.Add("Peso acumulado: " + String.Format("{0:0.00}", aW));
+            tV.Nodes[0].Nodes.Add("Peso acumulado: " + String.Format("{0:0.00}", aW));
         }
 
         //Act 4
@@ -335,6 +337,7 @@ namespace Proyecto_Integrador
         {
             Agent Prey;
             Vertex vOrg, vDes;
+            bool AgentFoundFlag = false;
 
             vOrg = SelcetedOrgVer();
             vDes = SelectedDesVer();
@@ -343,23 +346,45 @@ namespace Proyecto_Integrador
 
             if(vOrg != null && vDes != null)
             {
-                //Dijkstra
-                Prey = new Agent(vOrg, vDes, myBmpProcess.GetVerL(), agentL.Count);
-                //Add to agentList
-                agentL.Add(Prey);
-                usedRanVer.Add(vOrg.GetId());//Agregar a la lista de numeros Aletorios
+                if(vOrg != vDes)
+                {
+                    var bmpPrey = new Bitmap(bmpMan.bmpAnalyse);
+                    foreach(Agent a in agentL)
+                    {
+                        if(a.IsPrey && a.CurrEdge.Value.GetOrigen() == vOrg)
+                        {
+                            AgentFoundFlag = true;
+                        }
+                    }
+                    if(AgentFoundFlag == false)
+                    {
+                        Prey = new Agent(vOrg, vDes, myBmpProcess.GetVerL(), agentL.Count);
+                        //Draw agent
+                        myBmpProcess.DrawAgent(Prey.CurrPoint, bmpMan.purpleBrsh, bmpPrey);
 
-                //Draw Prey
-                Bitmap bmpPrey = new Bitmap(bmpMan.bmpAnalyse);
-                myBmpProcess.DrawAgent(Prey.CurrPoint, bmpMan.purpleBrsh, bmpPrey);
-                pictureBoxImg.Image = bmpPrey;
-                pictureBoxImg.Refresh();
+                        //Add to agentList
+                        agentL.Add(Prey);
+                        usedRanVer.Add(vOrg.GetId());//Agregar a la lista de numeros Aletorios
 
-                //Update Label
-                labelOrgDes.Text = "Org: " + Prey.Tree.VerL[0].GetId()
-                    + "   Des:" + Prey.Tree.VerL[Prey.Tree.VerL.Count - 1].GetId();
-                //Enable button Add hunter
-                bttnAddHunter.Enabled = true;
+                        pictureBoxImg.Image = bmpPrey;
+                        pictureBoxImg.Refresh();
+
+                        tbHunters.Maximum--;
+
+
+                        //Update Label
+                        labelOrgDes.Text = "Org: " + Prey.Tree.VerL[0].GetId()
+                            + "   Des:" + Prey.Tree.VerL[Prey.Tree.VerL.Count - 1].GetId();
+                        //Enable button Add hunter
+                        bttnAddHunter.Enabled = true;
+                    } else
+                    {
+                        MessageBox.Show("Ya hay un agente con ese origen.");
+                    }
+                } else
+                {
+                    MessageBox.Show("Origen y destino tienen que ser distintos.");
+                }
             } else
             {
                 MessageBox.Show("No se ha seleccionado origen/destino");
@@ -372,12 +397,12 @@ namespace Proyecto_Integrador
 
             for(int i = 0; i < tbHunters.Value; i++)
             {
-                Thread.Sleep(127);
+                //Thread.Sleep(1999);
                 ranVer = NewNum(usedRanVer, totVer);
                 agentL.Add(new Agent(myBmpProcess.GetVerL()[ranVer], myBmpProcess.GetVerL(), agentL.Count));//DFS
             }
             //Thread thr = new Thread(() => {
-                myBmpProcess.AnimateAllAgents(bmpMan.bmpAnalyse, agentL);
+            myBmpProcess.AnimateAllAgents(bmpMan.bmpAnalyse, agentL);
             //});
             //thr.Start();
         }
@@ -405,7 +430,7 @@ namespace Proyecto_Integrador
         //Proy. Integrador
         private void BttnFinBFS_Click( object sender, EventArgs e )
         {
-            myBmpProcess.Find_BFS(bmpMan.bmpAnalyse);
+            myBmpProcess.Find_BFS(bmpMan.bmpAnalyse, labelFindBFS);
         }
 
         //Extras

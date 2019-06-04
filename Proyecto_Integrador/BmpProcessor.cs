@@ -352,6 +352,15 @@ namespace Proyecto_Integrador
             Edge currE;
             int i = 0;
 
+            //var preyL = new List<Agent>();
+            //foreach(Agent a in agentL)
+            //{
+            //    if(a.IsPrey)
+            //    {
+            //        preyL.Add(a);
+            //    }
+            //}
+
             while(agentL.Count > 0)
             {
                 for(i = 0; i < agentL.Count; i++)
@@ -360,6 +369,7 @@ namespace Proyecto_Integrador
                     currE = agn.CurrEdge.Value;//Arista actual
                     currP = agn.CurrPoint;//Punto actual
 
+                    brsh = agn.IsPrey ? purpleBrsh : orangeBrsh;
                     if(agn.CONT_P < agn.LP.Count)//Total de todos lo puntos del Grafo
                     {
                         if(!currE.GetLP().Contains(currP))//Punto en que se encuentra de la arista
@@ -390,20 +400,19 @@ namespace Proyecto_Integrador
                                 }
                                 if(agn.IsTouchingHunter(agnDanger))
                                 {
-                                    MessageBox.Show("Presa atrapada.");
+                                    MessageBox.Show("Presa atrapada.");//<---------
                                     agentL.Remove(agn);
                                 }
                             }
                         }
                     } else
                     {
-                        MessageBox.Show("Fin recorrido.");
                         if(agn.IsPrey)
-                            return;
+                        {
+                            MessageBox.Show("Fin recorrido.");
+                        }
                         agentL.Remove(agn);//Si llegue al final, elimino agente
                     }
-
-                    brsh = agn.IsPrey ? purpleBrsh : orangeBrsh;
 
                     if(agn.CurrPoint != agn.LP[agn.LP.Count - 1])//Si el sig punto no sale de los indices
                         DrawAgent(new Point(agn.CurrPoint.X - 1, agn.CurrPoint.Y - 1), whiteBrsh, bmp);
@@ -412,26 +421,44 @@ namespace Proyecto_Integrador
                 pbImg.Refresh();//**** ¡Elimina el bmp! ****//
                 ClearBitmap(bmp);
             }
+
+            //Vertex vOrg, vDes;
+            //List<Vertex> agnVerL;
+            //foreach(Agent a in preyL)
+            //{
+            //    agnVerL = a.Tree.VerL;
+            //    vOrg = agnVerL[0];
+            //    vDes = agnVerL[agnVerL.Count - 1];
+            //    agentL.Add(new Agent(vOrg, vDes, graph.VerL, a.GetId()));
+            //}
         }
 
-        public void Find_BFS( Bitmap bmp )
+        public void Find_BFS( Bitmap bmp, Label label)
         {
             Graph Tree;
             List<Point> lP;
+            bool TreeFounded = false;
             Algorithms alg = new Algorithms(graph.VerL);
+
+            pbImg.Image = bmp;
 
             foreach(Vertex v in graph.VerL)
             {
                 lP = new List<Point>();
-                Tree = alg.DFS(v, lP);
+                Tree = alg.BFS(v, lP);
 
-                if(alg.SameHeightTree(Tree) == true)
+                if(alg.SameHeightTree(Tree))
                 {
+                    TreeFounded = true;
+                    label.Text = "Vertice origen: " + v.GetId().ToString();
                     DrawARM(bmp, Tree, orangeBrsh);
-                } else
-                {
-                    MessageBox.Show("No se encontro arbol");
+                    pbImg.Refresh();
+                    break;
                 }
+            }
+            if(!TreeFounded)
+            {
+                MessageBox.Show("No se encontro arbol");
             }
         }
 

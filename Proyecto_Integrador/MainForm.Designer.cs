@@ -83,6 +83,7 @@ namespace Proyecto_Integrador
             this.labelTDC = new System.Windows.Forms.Label();
             this.labelTBF = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.labelFindBFS = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxImg)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbNumVer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbHunters)).BeginInit();
@@ -92,7 +93,7 @@ namespace Proyecto_Integrador
             // 
             this.pictureBoxImg.Location = new System.Drawing.Point(177, 12);
             this.pictureBoxImg.Name = "pictureBoxImg";
-            this.pictureBoxImg.Size = new System.Drawing.Size(752, 590);
+            this.pictureBoxImg.Size = new System.Drawing.Size(752, 638);
             this.pictureBoxImg.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxImg.TabIndex = 0;
             this.pictureBoxImg.TabStop = false;
@@ -101,7 +102,7 @@ namespace Proyecto_Integrador
             // 
             this.treeViewCircles.Location = new System.Drawing.Point(6, 147);
             this.treeViewCircles.Name = "treeViewCircles";
-            this.treeViewCircles.Size = new System.Drawing.Size(164, 183);
+            this.treeViewCircles.Size = new System.Drawing.Size(164, 219);
             this.treeViewCircles.TabIndex = 0;
             this.treeViewCircles.DoubleClick += new System.EventHandler(this.TreeViewCircles_DoubleClick);
             // 
@@ -130,7 +131,7 @@ namespace Proyecto_Integrador
             // bttnAddAge
             // 
             this.bttnAddAge.Font = new System.Drawing.Font("Calibri Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bttnAddAge.Location = new System.Drawing.Point(11, 416);
+            this.bttnAddAge.Location = new System.Drawing.Point(9, 463);
             this.bttnAddAge.Name = "bttnAddAge";
             this.bttnAddAge.Size = new System.Drawing.Size(159, 48);
             this.bttnAddAge.TabIndex = 3;
@@ -141,7 +142,7 @@ namespace Proyecto_Integrador
             // labelAgents
             // 
             this.labelAgents.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelAgents.Location = new System.Drawing.Point(12, 333);
+            this.labelAgents.Location = new System.Drawing.Point(11, 371);
             this.labelAgents.Name = "labelAgents";
             this.labelAgents.Size = new System.Drawing.Size(157, 23);
             this.labelAgents.TabIndex = 4;
@@ -154,8 +155,8 @@ namespace Proyecto_Integrador
             // 
             // labelNumVer
             // 
-            this.labelNumVer.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelNumVer.Location = new System.Drawing.Point(145, 365);
+            this.labelNumVer.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelNumVer.Location = new System.Drawing.Point(144, 403);
             this.labelNumVer.Name = "labelNumVer";
             this.labelNumVer.Size = new System.Drawing.Size(24, 48);
             this.labelNumVer.TabIndex = 5;
@@ -165,7 +166,7 @@ namespace Proyecto_Integrador
             // tbNumVer
             // 
             this.tbNumVer.LargeChange = 1;
-            this.tbNumVer.Location = new System.Drawing.Point(12, 366);
+            this.tbNumVer.Location = new System.Drawing.Point(11, 404);
             this.tbNumVer.Name = "tbNumVer";
             this.tbNumVer.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.tbNumVer.Size = new System.Drawing.Size(127, 45);
@@ -174,7 +175,7 @@ namespace Proyecto_Integrador
             // 
             // treeViewCaMaLa
             // 
-            this.treeViewCaMaLa.Location = new System.Drawing.Point(11, 550);
+            this.treeViewCaMaLa.Location = new System.Drawing.Point(9, 597);
             this.treeViewCaMaLa.Name = "treeViewCaMaLa";
             this.treeViewCaMaLa.Size = new System.Drawing.Size(160, 52);
             this.treeViewCaMaLa.TabIndex = 6;
@@ -182,7 +183,7 @@ namespace Proyecto_Integrador
             // bttnCaMaLaAg
             // 
             this.bttnCaMaLaAg.Font = new System.Drawing.Font("Calibri Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bttnCaMaLaAg.Location = new System.Drawing.Point(12, 496);
+            this.bttnCaMaLaAg.Location = new System.Drawing.Point(10, 543);
             this.bttnCaMaLaAg.Name = "bttnCaMaLaAg";
             this.bttnCaMaLaAg.Size = new System.Drawing.Size(76, 48);
             this.bttnCaMaLaAg.TabIndex = 7;
@@ -193,7 +194,7 @@ namespace Proyecto_Integrador
             // cbAgents
             // 
             this.cbAgents.FormattingEnabled = true;
-            this.cbAgents.Location = new System.Drawing.Point(12, 467);
+            this.cbAgents.Location = new System.Drawing.Point(10, 514);
             this.cbAgents.Name = "cbAgents";
             this.cbAgents.Size = new System.Drawing.Size(158, 21);
             this.cbAgents.Sorted = true;
@@ -202,7 +203,7 @@ namespace Proyecto_Integrador
             // bttnCaMaLaVer
             // 
             this.bttnCaMaLaVer.Font = new System.Drawing.Font("Calibri Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bttnCaMaLaVer.Location = new System.Drawing.Point(94, 496);
+            this.bttnCaMaLaVer.Location = new System.Drawing.Point(92, 543);
             this.bttnCaMaLaVer.Name = "bttnCaMaLaVer";
             this.bttnCaMaLaVer.Size = new System.Drawing.Size(76, 48);
             this.bttnCaMaLaVer.TabIndex = 10;
@@ -308,7 +309,7 @@ namespace Proyecto_Integrador
             this.bttnAddPrey.Font = new System.Drawing.Font("Calibri Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bttnAddPrey.Location = new System.Drawing.Point(1076, 346);
             this.bttnAddPrey.Name = "bttnAddPrey";
-            this.bttnAddPrey.Size = new System.Drawing.Size(128, 48);
+            this.bttnAddPrey.Size = new System.Drawing.Size(129, 48);
             this.bttnAddPrey.TabIndex = 20;
             this.bttnAddPrey.Text = "Add prey";
             this.bttnAddPrey.UseVisualStyleBackColor = true;
@@ -342,7 +343,7 @@ namespace Proyecto_Integrador
             // 
             // labelHunters
             // 
-            this.labelHunters.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelHunters.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelHunters.Location = new System.Drawing.Point(1046, 403);
             this.labelHunters.Name = "labelHunters";
             this.labelHunters.Size = new System.Drawing.Size(22, 34);
@@ -365,7 +366,7 @@ namespace Proyecto_Integrador
             this.bttnAddHunter.Font = new System.Drawing.Font("Calibri Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bttnAddHunter.Location = new System.Drawing.Point(1076, 400);
             this.bttnAddHunter.Name = "bttnAddHunter";
-            this.bttnAddHunter.Size = new System.Drawing.Size(127, 48);
+            this.bttnAddHunter.Size = new System.Drawing.Size(129, 48);
             this.bttnAddHunter.TabIndex = 27;
             this.bttnAddHunter.Text = "Add hunter";
             this.bttnAddHunter.UseVisualStyleBackColor = true;
@@ -393,7 +394,7 @@ namespace Proyecto_Integrador
             // 
             // labelOrgDes
             // 
-            this.labelOrgDes.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelOrgDes.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelOrgDes.Location = new System.Drawing.Point(940, 365);
             this.labelOrgDes.Name = "labelOrgDes";
             this.labelOrgDes.Size = new System.Drawing.Size(128, 29);
@@ -406,7 +407,7 @@ namespace Proyecto_Integrador
             this.bttnFinBFS.Font = new System.Drawing.Font("Calibri Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bttnFinBFS.Location = new System.Drawing.Point(940, 570);
             this.bttnFinBFS.Name = "bttnFinBFS";
-            this.bttnFinBFS.Size = new System.Drawing.Size(264, 32);
+            this.bttnFinBFS.Size = new System.Drawing.Size(265, 45);
             this.bttnFinBFS.TabIndex = 33;
             this.bttnFinBFS.Text = "Find";
             this.bttnFinBFS.UseVisualStyleBackColor = true;
@@ -438,7 +439,7 @@ namespace Proyecto_Integrador
             this.bttnDivCon.Font = new System.Drawing.Font("Calibri Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bttnDivCon.Location = new System.Drawing.Point(1077, 477);
             this.bttnDivCon.Name = "bttnDivCon";
-            this.bttnDivCon.Size = new System.Drawing.Size(124, 45);
+            this.bttnDivCon.Size = new System.Drawing.Size(128, 45);
             this.bttnDivCon.TabIndex = 36;
             this.bttnDivCon.Text = "Divide and Conquer";
             this.bttnDivCon.UseVisualStyleBackColor = true;
@@ -456,7 +457,7 @@ namespace Proyecto_Integrador
             // 
             // labelTDC
             // 
-            this.labelTDC.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTDC.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelTDC.Location = new System.Drawing.Point(1077, 525);
             this.labelTDC.Name = "labelTDC";
             this.labelTDC.Size = new System.Drawing.Size(124, 19);
@@ -466,7 +467,7 @@ namespace Proyecto_Integrador
             // 
             // labelTBF
             // 
-            this.labelTBF.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTBF.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelTBF.Location = new System.Drawing.Point(940, 525);
             this.labelTBF.Name = "labelTBF";
             this.labelTBF.Size = new System.Drawing.Size(128, 19);
@@ -476,7 +477,7 @@ namespace Proyecto_Integrador
             // 
             // label1
             // 
-            this.label1.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(941, 343);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(123, 23);
@@ -484,10 +485,21 @@ namespace Proyecto_Integrador
             this.label1.Text = "New";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // labelFindBFS
+            // 
+            this.labelFindBFS.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelFindBFS.Location = new System.Drawing.Point(940, 618);
+            this.labelFindBFS.Name = "labelFindBFS";
+            this.labelFindBFS.Size = new System.Drawing.Size(264, 31);
+            this.labelFindBFS.TabIndex = 41;
+            this.labelFindBFS.Text = "Verice origen: ";
+            this.labelFindBFS.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1216, 614);
+            this.ClientSize = new System.Drawing.Size(1216, 662);
+            this.Controls.Add(this.labelFindBFS);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.labelTBF);
             this.Controls.Add(this.labelTDC);
@@ -571,5 +583,6 @@ namespace Proyecto_Integrador
         private System.Windows.Forms.Label labelTDC;
         private System.Windows.Forms.Label labelTBF;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelFindBFS;
     }
 }
