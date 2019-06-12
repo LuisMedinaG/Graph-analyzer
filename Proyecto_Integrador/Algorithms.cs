@@ -8,6 +8,7 @@ namespace Proyecto_Integrador
 {
     class Algorithms
     {
+        public List<Vertex> Leaves { get; set; }
         public List<Vertex> VertexL { get; set; }
         public List<Edge> EdgesL { get; set; }
         public Graph MyGraph { get; set; }
@@ -22,50 +23,50 @@ namespace Proyecto_Integrador
             MyGraph = new Graph();
 
             foreach(Vertex cir in lV)
-                foreach(Edge ari in cir.GetLA())
+                foreach(Edge ari in cir.GetEdgL())
                     if(!EdgesL.Contains(ari))
                         EdgesL.Add(ari);
         }
 
         public Graph BFS( Vertex v_o, List<Point> lP )
         {
+            Leaves = new List<Vertex>();
             var queue = new Queue<Vertex>();
-            var visitados = new HashSet<Vertex>();
+            var visitados = new List<Vertex>();
 
             MyGraph = new Graph();
 
             queue.Enqueue(v_o);
             visitados.Add(v_o);
-            MyGraph.VerL.Add(v_o);
 
             BFS(queue, visitados, MyGraph, lP);
+
+            MyGraph.VerL = visitados;
             return MyGraph;
         }
-        private void BFS( Queue<Vertex> queue, HashSet<Vertex> visited, Graph myGraph, List<Point> lP )
+        private void BFS( Queue<Vertex> queue, List<Vertex> visited, 
+                            Graph myGraph, List<Point> lP )
         {
+            if(queue.Count == 0)
+                return;
+
             v_act = queue.Dequeue();
-            foreach(Edge e in v_act.GetLA())
+            var flag = false;
+            foreach(Edge e in v_act.GetEdgL())
             {
                 des = e.GetDestino();
                 if(!visited.Contains(des))
                 {
+                    flag = true;
                     visited.Add(des);
                     queue.Enqueue(des);
 
-                    myGraph.VerL.Add(des);
                     myGraph.EdgL.AddLast(e);
-
-                    lPR = e.GetLP();
-                    lP.AddRange(e.GetLP());
-
-                    BFS(queue, visited, myGraph, lP);
-
-                    lPR = new List<Point>(e.GetLP());
-                    lPR.Reverse();
-                    lP.AddRange(lPR);
-                    myGraph.EdgL.AddLast(new Edge(e.GetDestino(), e.GetOrigen(), e.GetPonderacion(), e.GetId(), lPR));
                 }
             }
+            if(!flag)
+                Leaves.Add(v_act);
+            BFS(queue, visited, myGraph, lP);
         }
 
         public Graph DFS( Vertex v_o, List<Point> lP )
@@ -85,10 +86,10 @@ namespace Proyecto_Integrador
         private void DFS( Stack<Vertex> pila, HashSet<Vertex> visited, Graph G, List<Point> lP )
         {
             v_act = pila.Pop();
-            foreach(Edge e in v_act.GetLA())
+            foreach(Edge e in v_act.GetEdgL())// n veces
             {
                 des = e.GetDestino();
-                if(!visited.Contains(des))
+                if(!visited.Contains(des))// O(n)
                 {
                     visited.Add(des);
                     pila.Push(des);
@@ -104,33 +105,35 @@ namespace Proyecto_Integrador
                     lPR = new List<Point>(e.GetLP());
                     lPR.Reverse();
                     lP.AddRange(lPR);
-                    G.EdgL.AddLast(new Edge(e.GetDestino(), e.GetOrigen(), e.GetPonderacion(), e.GetId(), lPR));
+                    G.EdgL.AddLast(new Edge(e.GetDestino(), e.GetOrigen(),
+                                            e.GetPonderacion(), e.GetId(), lPR));
                 }
             }
         }
 
         public Graph Dijsktra( Vertex org, Vertex des, List<Point> lP )
         {
+            DijElemnt u, v;
             var g = new Graph();
             var S = new List<DijElemnt>();
             var Q = new Queue<DijElemnt>();
             var DijEleL = new List<DijElemnt>();
-            DijElemnt u, v;
 
-            for(int i = 0; i < VertexL.Count; i++)
+            for(int i = 0; i < VertexL.Count; i++)// O(n)
             {
                 DijEleL.Add(new DijElemnt(VertexL[i]));
             }
-            u = DijEleL.Find(x => x.Ver.GetId() == org.GetId());
+            u = DijEleL.Find(x => x.Ver.GetId() == org.GetId());// O(n)
 
             u.DistAcu = 0;
             u.Definitivo = true;
 
-            while(!SolucionDij(DijEleL))//Todos no este definitivos
+            // Complejidad Dijkstra = O(n^2)
+            while(!SolucionDij(DijEleL))//Todos no esten definitivos
             {
-                foreach(Edge e in u.Ver.GetLA())
+                foreach(Edge e in u.Ver.GetEdgL())// n veces
                 {
-                    v = DijEleL.Find(x => x.Ver.GetId() == e.GetDestino().GetId());
+                    v = DijEleL.Find(x => x.Ver.GetId() == e.GetDestino().GetId());// O(n)
 
                     if(v.DistAcu > u.DistAcu + e.GetPonderacion())
                     {
@@ -142,9 +145,17 @@ namespace Proyecto_Integrador
                 u = MinDist(DijEleL);
                 u.Definitivo = true;
 
-                if(u.Ver.GetId() == des.GetId())
+                try
                 {
-                    break;
+                    var vDes = des.GetId();
+                    if(u.Ver.GetId() == vDes)
+                    {
+                        break;
+                    }
+                } catch(Exception)
+                {
+                    System.Windows.Forms.MessageBox.Show("Verice no conexo.");
+                    return null;
                 }
             }
 
@@ -155,7 +166,7 @@ namespace Proyecto_Integrador
 
             while(auxDijEle.Ver.GetId() != org.GetId())
             {
-                foreach(Edge edg in auxDijEle.Proveniente.GetLA())
+                foreach(Edge edg in auxDijEle.Proveniente.GetEdgL())
                 {
                     if(auxDijEle.Ver.GetId() == edg.GetDestino().GetId())
                     {
@@ -229,7 +240,7 @@ namespace Proyecto_Integrador
                 vVistitados.Add(vertex);
                 MyGraph.VerL.Add(vertex);
 
-                foreach(Edge a in vertex.GetLA())
+                foreach(Edge a in vertex.GetEdgL())
                     aCandidatas.Add(a);
 
                 ariMin = SelecAriMin(aCandidatas, vVistitados);
@@ -295,43 +306,42 @@ namespace Proyecto_Integrador
             return u;
         }
         //BFS
-        public bool SameHeightTree( Graph Tree )
+        public bool SameHeightTree( Graph Tree, Vertex root )
         {
-            var node = Tree.EdgL.First;
-            var visited = new List<Vertex>();
-            int currDepth = 0, biggestDepth = int.MinValue;
-            Vertex currVer;
-            bool firstIter = true;
-
-            visited.Add(node.Value.GetOrigen());
-
-            foreach(Edge edg in Tree.EdgL)
+            if(Tree.EdgL.Count > 0)
             {
-                currVer = edg.GetDestino();
-                if(visited.Contains(currVer))
+                var heigth = 0;
+                var heigthL = new List<int>();
+                var visited = new List<Vertex>();
+
+                foreach(Vertex ver in Leaves)
                 {
-                    if(currDepth > biggestDepth)
+                    heigth = 0;
+                    var currVer = ver;
+                    while(currVer != root)
                     {
-                        if(firstIter)
+                        foreach(Edge edg in Tree.EdgL)
                         {
-                            biggestDepth = currDepth;
-                            firstIter = false;
-                        } else
-                        {
-                            return false;
+                            if(edg.GetDestino() == currVer)
+                            {
+                                currVer = edg.GetOrigen();
+                                heigth++;
+                                break;
+                            }
                         }
                     }
-                    currDepth--;
-                } else
-                {
-                    visited.Add(currVer);
-                    currDepth++;
+                    heigthL.Add(heigth);
                 }
-                //System.Windows.Forms.MessageBox.Show("CurrVer: " + currVer +
-                //                                   "\nBiggest Depth: " + biggestDepth +
-                //                                   "\nCurrDepth: " + currDepth);
+                for(int i = 0; i < heigthL.Count - 1; i++)
+                {
+                    if(heigthL[i] != heigthL[i + 1])
+                    {
+                        return false;
+                    }
+                }
+                return true;
             }
-            return true;
+            return false;
         }
     }
 }

@@ -24,11 +24,13 @@ namespace Proyecto_Integrador
         //Random Path Agent
         public Agent( Vertex vOrg, int id )
         {
+            Point p;
+            Vertex vOrgCpy = vOrg;
+            bool creandoCamino = true;
+
             CONT_P = 0;
             this.id = id;
             IsPrey = false;
-            bool creandoCamino = true;
-            Vertex vOrgCpy = vOrg;
 
             LP = new List<Point>();
             usadas = new List<Edge>();
@@ -41,11 +43,12 @@ namespace Proyecto_Integrador
                 if(a_aleatoria != null)
                 {
                     usadas.Add(a_aleatoria);
-                    foreach(Point p in a_aleatoria.GetLP())
+                    for(int i = 0; i < a_aleatoria.GetLP().Count; i++)
                     {
+                        p = a_aleatoria.GetLP()[i];
                         LP.Add(p);
-                    }
 
+                    }
                     DistAcu += a_aleatoria.GetPonderacion();
                     vOrgCpy = a_aleatoria.GetDestino();
                 } else
@@ -80,17 +83,23 @@ namespace Proyecto_Integrador
             LP = new List<Point>();
             Tree = alg.Dijsktra(org, des, LP);
 
-            if(Tree.EdgL.Count > 0)
+            if(Tree != null)
             {
-                CurrPoint = LP[0];//First point
-                CurrEdge = Tree.EdgL.First;//First edge
+                if(Tree.EdgL.Count > 0)
+                {
+                    CurrPoint = LP[0];//First point
+                    CurrEdge = Tree.EdgL.First;//First edge
+                }
+            } else
+            {
+                MessageBox.Show("No contiene aristas.");
             }
         }
 
         private Edge SeleccionaAristaAleatoria( Vertex v_origen )
         {
             int randAris;
-            List<Edge> lA = v_origen.GetLA();
+            List<Edge> lA = v_origen.GetEdgL();
             List<Edge> candidates = new List<Edge>();
             for(int i = 0; i < lA.Count; i++)
             {

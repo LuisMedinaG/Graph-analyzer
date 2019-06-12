@@ -11,7 +11,7 @@ namespace Proyecto_Integrador
     public class BmpProcessor
     {
         int totVertex;
-        Graph graph;
+        public Graph graph { get; set; }
         List<Agent> lAgn;
         List<Point> lPR;
 
@@ -89,8 +89,20 @@ namespace Proyecto_Integrador
             greenBrsh = new SolidBrush(Color.Green);
 
             DrawCircle(tempCircle, bmp, greenBrsh);
-            //DrawCenter(pCent);
+            DrawCenter(pCent, bmp);
             return tempCircle;
+        }
+
+        private void DrawCenter( Point pCent, Bitmap bmp )
+        {
+            //Pen penBlue = new Pen(Color.Red, 4);
+            //gBmp = Graphics.FromImage(bmp);
+            //gBmp.DrawLine(penBlue, pCent, new Point(pCent.X + 10, pCent.Y));
+            //pbImg.Refresh();
+            const int k = 8;
+            for(int i = -k; i < k; i++)
+                for(int j = -k; j < k; j++)
+                    bmp.SetPixel(pCent.X + i, pCent.Y + j, Color.Blue);
         }
 
         //Act 2
@@ -121,13 +133,13 @@ namespace Proyecto_Integrador
                         if(DDA(ori, des, bmpTemp, lP))
                         {
                             e = new Edge(ori, des, distAct, ++contAris, lP);
-                            ori.LA.Add(e);
+                            ori.EdgL.Add(e);
 
                             graph.EdgL.AddLast(e);//Optional
 
                             lPR = new List<Point>(lP);
                             lPR.Reverse();
-                            des.LA.Add(new Edge(des, ori, distAct, ++contAris, lPR));
+                            des.EdgL.Add(new Edge(des, ori, distAct, ++contAris, lPR));
 
                             gBmp_2.DrawLine(penBlck, ori.GetX(), ori.GetY(),
                                                    des.GetX(), des.GetY());
@@ -241,7 +253,13 @@ namespace Proyecto_Integrador
 
             if(graph.VerL.Count > 1)
             {
-                DeepAnimation(ARM.EdgL.First.Value.GetOrigen(), visited, ARM);
+                if(ARM.EdgL.Count > 0)
+                {
+                    DeepAnimation(ARM.EdgL.First.Value.GetOrigen(), visited, ARM);
+                } else
+                {
+                    MessageBox.Show("No contiene aristas.");
+                }
             }
         }
 
@@ -251,10 +269,8 @@ namespace Proyecto_Integrador
             if(!visited.Contains(vertex))
             {
                 visited.Add(vertex);
-                //for(int i = 0; i < Tree.EdgL.Count; ++i)
                 foreach(Edge edgeA in Tree.EdgL)
                 {
-                    //Edge edgeA = Tree.EdgL[i];
                     if(vertex == edgeA.GetOrigen() && !visited.Contains(edgeA.GetDestino()))
                     {
                         AnimateEdge(bmpARM, edgeA.GetLP());
@@ -292,29 +308,30 @@ namespace Proyecto_Integrador
 
             List<List<Point>> lLP = new List<List<Point>>();
 
-            lAgents.Sort(CompLAg);
+            if(graph.EdgL.Count > 0)
+            {
+                lAgents.Sort(CompLAg);
 
-            foreach(Agent A in lAgents)
-            {//por cada agente en ListaAgentes
-                lPU = A.GetLPU();
-                lLP.Add(lPU);
+                foreach(Agent A in lAgents)//por cada agente en ListaAgentes
+                {
+                    lPU = A.GetLPU();
+                    lLP.Add(lPU);
+                }
+                DrawAllAgents(lLP);
+            } else
+            {
+                MessageBox.Show("No contiene aristas.");
             }
-            DrawAllAgents(lLP);
         }
         private void AnimateEdge( Bitmap bmp, List<Point> lP )
         {
-            //new Thread(() => {
-            //    lock(this)
-            //    {
-            for(int i = 0; i < lP.Count - 10; i += 10)
+            for(int i = 0; i < lP.Count - 15; i += 15)
             {
                 DrawAgent(lP[i], whiteBrsh, bmp);
                 DrawAgent(lP[i + 1], orangeBrsh, bmp);
                 pbImg.Refresh();
                 ClearBitmap(bmp);
             }
-            //    }
-            //}).Start();
         }
         private void DrawAllAgents( List<List<Point>> lLP )
         {
@@ -328,7 +345,7 @@ namespace Proyecto_Integrador
                 for(int j = 0; j < lLP.Count; j++)
                 {
                     lP = lLP[j];
-                    if(i < lP.Count - 6)
+                    if(i < lP.Count - 10)
                     {
                         DrawAgent(lP[i], whiteBrsh, bmpAnalyse);
                         DrawAgent(lP[i + 1], orangeBrsh, bmpAnalyse);
@@ -336,7 +353,7 @@ namespace Proyecto_Integrador
                 }
                 pbImg.Refresh();
                 ClearBitmap(bmpAnalyse);
-                i += 6;
+                i += 10;
             }
         }
 
@@ -351,15 +368,6 @@ namespace Proyecto_Integrador
             Point currP;
             Edge currE;
             int i = 0;
-
-            //var preyL = new List<Agent>();
-            //foreach(Agent a in agentL)
-            //{
-            //    if(a.IsPrey)
-            //    {
-            //        preyL.Add(a);
-            //    }
-            //}
 
             while(agentL.Count > 0)
             {
@@ -400,7 +408,7 @@ namespace Proyecto_Integrador
                                 }
                                 if(agn.IsTouchingHunter(agnDanger))
                                 {
-                                    MessageBox.Show("Presa atrapada.");//<---------
+                                    MessageBox.Show("Presa atrapada.");
                                     agentL.Remove(agn);
                                 }
                             }
@@ -421,53 +429,14 @@ namespace Proyecto_Integrador
                 pbImg.Refresh();//**** ¡Elimina el bmp! ****//
                 ClearBitmap(bmp);
             }
-
-            //Vertex vOrg, vDes;
-            //List<Vertex> agnVerL;
-            //foreach(Agent a in preyL)
-            //{
-            //    agnVerL = a.Tree.VerL;
-            //    vOrg = agnVerL[0];
-            //    vDes = agnVerL[agnVerL.Count - 1];
-            //    agentL.Add(new Agent(vOrg, vDes, graph.VerL, a.GetId()));
-            //}
-        }
-
-        public void Find_BFS( Bitmap bmp, Label label)
-        {
-            Graph Tree;
-            List<Point> lP;
-            bool TreeFounded = false;
-            Algorithms alg = new Algorithms(graph.VerL);
-
-            pbImg.Image = bmp;
-
-            foreach(Vertex v in graph.VerL)
-            {
-                lP = new List<Point>();
-                Tree = alg.BFS(v, lP);
-
-                if(alg.SameHeightTree(Tree))
-                {
-                    TreeFounded = true;
-                    label.Text = "Vertice origen: " + v.GetId().ToString();
-                    DrawARM(bmp, Tree, orangeBrsh);
-                    pbImg.Refresh();
-                    break;
-                }
-            }
-            if(!TreeFounded)
-            {
-                MessageBox.Show("No se encontro arbol");
-            }
         }
 
         //Act 6
         public void CloPoi_BruteForce( Bitmap bmp )
         {
             Vertex pOrgM, pDesM;
-
             gBmp = Graphics.FromImage(bmp);
+
             if(graph.VerL.Count > 1)
             {
                 var pL = CloPoi_BruteForce(graph.VerL, graph.VerL.Count);
@@ -485,9 +454,23 @@ namespace Proyecto_Integrador
 
             VerL.Sort(( x, y ) => x.GetX().CompareTo(y.GetX()));//Sort in X
 
-            var pL = CloPoi_DivideConquer(VerL, 0, VerL.Count - 1);
+            int mid = VerL.Count / 2;
+            Point mP = VerL[mid].GetPoint();
 
-            gBmp.DrawLine(new Pen(Color.Pink, 3), pL[0].GetX(), pL[0].GetY(), pL[1].GetX(), pL[1].GetY());
+            var cloPoi = Recursive_DivCon(VerL, 0, VerL.Count - 1);// O(nlog(n))
+            double dist_CloPoi = GetDist(cloPoi[0], cloPoi[1]);
+
+            var stripPoiL = new List<Point>();
+            for(int i = 0; i < VerL.Count; i++)// n veces
+                if(Abs(VerL[i].GetPoint().X - mP.X) < dist_CloPoi)
+                    stripPoiL.Add(VerL[i].GetPoint());
+
+            var cloPoi_Strip = StripClosest(VerL, stripPoiL.Count, dist_CloPoi);//O(n^2)
+            double dist_CloPoiStrip = GetDist(cloPoi_Strip[0], cloPoi_Strip[1]);
+
+            cloPoi = dist_CloPoi < dist_CloPoiStrip ? cloPoi : cloPoi_Strip;
+            gBmp.DrawLine(new Pen(Color.Pink, 3), cloPoi[0].GetX(), cloPoi[0].GetY(),
+                                                    cloPoi[1].GetX(), cloPoi[1].GetY());
             pbImg.Refresh();
         }
         private List<Vertex> CloPoi_BruteForce( List<Vertex> VerL, int n )
@@ -499,9 +482,9 @@ namespace Proyecto_Integrador
             pOrgM = VerL[0];
             pDesM = VerL[1];
             distMin = double.MaxValue;
-            for(int i = 0; i < n; i++)
+            for(int i = 0; i < n; i++)// n veces
             {
-                for(int j = i + 1; j < n; j++)
+                for(int j = i + 1; j < n; j++)// n veces - i + 1
                 {
                     pOrg = VerL[i];
                     pDes = VerL[j];
@@ -520,35 +503,25 @@ namespace Proyecto_Integrador
             };
             return pL;
         }
-        private List<Vertex> CloPoi_DivideConquer( List<Vertex> VerL, int beg, int end )
+        private List<Vertex> Recursive_DivCon( List<Vertex> VerL, int beg, int end )
         {
             if(VerL.Count <= 3)
             {
-                return CloPoi_BruteForce(VerL, VerL.Count);
+                return CloPoi_BruteForce(VerL, VerL.Count);// O(3)
             }
             int mid = VerL.Count / 2;
             Point mP = VerL[mid].GetPoint();
 
             var midArr_L = VerL.GetRange(0, mid);
             var midArr_R = VerL.GetRange(mid, mid);
-            var pL_L = CloPoi_DivideConquer(midArr_L, beg, mid);
-            var pL_R = CloPoi_DivideConquer(midArr_R, mid, end);
+            var pL_L = Recursive_DivCon(midArr_L, beg, mid);// O(nLog(n))
+            var pL_R = Recursive_DivCon(midArr_R, mid, end);// O(nLog(n))
 
             double distPL_L = GetDist(pL_L[0], pL_L[1]);
             double distPL_R = GetDist(pL_R[0], pL_R[1]);
 
             double minDist = distPL_L < distPL_R ? distPL_L : distPL_R;
-            var pL_Min = distPL_L < distPL_R ? pL_L : pL_R;
-
-            var stripL = new List<Point>();
-            for(int i = 0; i < VerL.Count; i++)
-                if(Abs(VerL[i].GetPoint().X - mP.X) < minDist)
-                    stripL.Add(VerL[i].GetPoint());
-
-            var pL_Strip = StripClosest(VerL, stripL.Count, minDist);
-            double minDistStrip = GetDist(pL_Strip[0], pL_Strip[1]);
-
-            return minDist < minDistStrip ? pL_Min : pL_Strip;
+            return distPL_L < distPL_R ? pL_L : pL_R;
         }
         private List<Vertex> StripClosest( List<Vertex> stripL, int size, double minDist )
         {
@@ -560,7 +533,8 @@ namespace Proyecto_Integrador
             stripL.Sort(( x, y ) => x.GetY().CompareTo(y.GetY()));
 
             for(int i = 0; i < size; ++i)
-                for(int j = i + 1; j < size && (stripL[j].GetPoint().Y - stripL[i].GetPoint().Y) < min; ++j)
+                for(int j = i + 1; j < size &&
+                    (stripL[j].GetPoint().Y - stripL[i].GetPoint().Y) < min; ++j)
                     if(GetDist(stripL[i], stripL[j]) < min)
                     {
                         min = GetDist(stripL[i], stripL[j]);
@@ -573,6 +547,36 @@ namespace Proyecto_Integrador
                 pDesM
             };
             return pL;
+        }
+
+        public void Find_BFS( Bitmap bmp, Label label )
+        {
+            Graph Tree;
+            List<Point> lP;
+            bool TreeFounded = false;
+            Algorithms alg = new Algorithms(graph.VerL);
+
+            pbImg.Image = bmp;
+
+            foreach(Vertex v in graph.VerL)
+            {
+                lP = new List<Point>();
+                Tree = alg.BFS(v, lP);
+
+                if(alg.SameHeightTree(Tree, v))
+                {
+                    TreeFounded = true;
+                    DrawCircle(v, bmp, orangeBrsh);
+                    label.Text = "Vertice origen: " + v.GetId().ToString();
+                    DrawARM(bmp, Tree, orangeBrsh);
+                    pbImg.Refresh();
+                    break;
+                }
+            }
+            if(!TreeFounded)
+            {
+                MessageBox.Show("No se encontro arbol");
+            }
         }
 
         //Drawing func.

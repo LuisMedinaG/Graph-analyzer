@@ -9,24 +9,19 @@ namespace Proyecto_Integrador
         int r;
         int id;
         Point p;
-        public List<Edge> LA { get; set; }
+        public List<Edge> EdgL { get; set; }
 
         public Vertex( Point p, int r, int id )
         {
             this.p = p;
             this.r = r;
             this.id = id;
-            LA = new List<Edge>();
+            EdgL = new List<Edge>();
         }
 
-        //public void AddArista( Vertex origen, Vertex destino, double pond, int id, List<Point> lP )
-        //{
-        //    LA.Add(new Edge(origen, destino, pond, id, lP));
-        //}
-
-        public List<Edge> GetLA()
+        public List<Edge> GetEdgL()
         {
-            return LA;
+            return EdgL;
         }
 
         public void SetId( int id )
@@ -46,7 +41,7 @@ namespace Proyecto_Integrador
 
         public void SetLA( List<Edge> lA )
         {
-            this.LA = lA;
+            this.EdgL = lA;
         }
 
         public int GetX()
@@ -76,7 +71,19 @@ namespace Proyecto_Integrador
 
         public override string ToString()
         {
-            return string.Format("Vertice {0}", id);
+            return string.Format("Vertice {0}({1},{2})", id, p.X, p.Y);
+        }
+
+        public bool IsLEave( List<Vertex> visited )
+        {
+            foreach(Edge edg in EdgL)
+            {
+                if(!visited.Contains(edg.GetDestino()))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

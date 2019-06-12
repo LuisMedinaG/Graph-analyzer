@@ -395,7 +395,7 @@ namespace Proyecto_Integrador
             // labelOrgDes
             // 
             this.labelOrgDes.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelOrgDes.Location = new System.Drawing.Point(940, 365);
+            this.labelOrgDes.Location = new System.Drawing.Point(941, 365);
             this.labelOrgDes.Name = "labelOrgDes";
             this.labelOrgDes.Size = new System.Drawing.Size(128, 29);
             this.labelOrgDes.TabIndex = 32;
@@ -478,7 +478,7 @@ namespace Proyecto_Integrador
             // label1
             // 
             this.label1.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(941, 343);
+            this.label1.Location = new System.Drawing.Point(941, 346);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(123, 23);
             this.label1.TabIndex = 40;

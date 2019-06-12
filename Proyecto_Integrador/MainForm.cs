@@ -51,17 +51,18 @@ namespace Proyecto_Integrador
             bttnBruFor.Enabled = false;
             bttnDivCon.Enabled = false;
             bttnFinBFS.Enabled = false;
+
+            tbHunters.Enabled = false;
         }
         private void UpdateTreeView()
         {
-            List<Vertex> myLc;
+            var myLc = myBmpProcess.GetVerL();
 
-            myLc = myBmpProcess.GetVerL();
             treeViewCircles.Nodes.Clear();
             for(int i = 0; i < myLc.Count; i++)
             {
                 treeViewCircles.Nodes.Add(myLc[i].ToString());
-                foreach(Edge e in myLc[i].GetLA())
+                foreach(Edge e in myLc[i].GetEdgL())
                 {
                     treeViewCircles.Nodes[i].Nodes.Add(e.ToString());
                 }
@@ -91,7 +92,7 @@ namespace Proyecto_Integrador
             }
 
             //___Enables bttns___
-            if(myBmpProcess.GetVerL().Count > 1)
+            if(myBmpProcess.GetVerL().Count > 1 && myBmpProcess.graph.EdgL.Count > 0)
             {
                 tbNumVer.Enabled = true;
                 bttnAddAge.Enabled = true;
@@ -102,6 +103,9 @@ namespace Proyecto_Integrador
                 bttnBruFor.Enabled = true;
                 bttnDivCon.Enabled = true;
                 bttnFinBFS.Enabled = true;
+
+                tbHunters.Enabled = true;
+
             }
         }
 
@@ -177,38 +181,37 @@ namespace Proyecto_Integrador
             numAgents = tbNumVer.Value;
             lNum = new List<int>();
             lAgents = new List<Agent>();
-            rand = new Random();
 
-            if(numAgents > 0 && myBmpProcess.GetVerL().Count > 1)
+            if(myBmpProcess.graph.EdgL.Count > 0)
             {
-                for(int i = 0; i < numAgents; i++)
+                if(numAgents > 0 && myBmpProcess.GetVerL().Count > 1)
                 {
-                    do
+                    for(int i = 0; i < numAgents; i++)
                     {
-                        uniqueNum = rand.Next(myBmpProcess.GetNumCircles());
-                    } while(lNum.Contains(uniqueNum));
+                        uniqueNum = NewNum(lNum, numAgents);
+                        org = myBmpProcess.GetVerL()[uniqueNum];
+                        lAgents.Add(new Agent(org, i));
+                    }
+                    //Animate list of agents
+                    myBmpProcess.AnimateLAgents(lAgents);
 
-                    lNum.Add(uniqueNum);
-                    //NewNum(lNum, numAgents);
-                    org = myBmpProcess.GetVerL()[uniqueNum];
-                    lAgents.Add(new Agent(org, i));
+                    //___Enables bttns___
+                    bttnCaMaLaAg.Enabled = true;
+                    bttnCaMaLaVer.Enabled = true;
+                    cbAgents.Enabled = true;
+                    bttnAddAge.Enabled = false;
+                    tbNumVer.Enabled = false;
+
+                    //Fill combo box
+                    cbAgents.Items.Clear();
+                    foreach(Agent a in lAgents)
+                    {
+                        cbAgents.Items.Add(a.GetId());
+                    }
                 }
-                //Animate list of agents
-                myBmpProcess.AnimateLAgents(lAgents);
-
-                //___Enables bttns___
-                bttnCaMaLaAg.Enabled = true;
-                bttnCaMaLaVer.Enabled = true;
-                cbAgents.Enabled = true;
-                bttnAddAge.Enabled = false;
-                tbNumVer.Enabled = false;
-
-                //Fill combo box
-                cbAgents.Items.Clear();
-                foreach(Agent a in lAgents)
-                {
-                    cbAgents.Items.Add(a.GetId());
-                }
+            } else
+            {
+                MessageBox.Show("No contiene aristas.");
             }
         }
         private void BttnCaMaLaVer_Click( object sender, EventArgs e )
@@ -359,24 +362,27 @@ namespace Proyecto_Integrador
                     if(AgentFoundFlag == false)
                     {
                         Prey = new Agent(vOrg, vDes, myBmpProcess.GetVerL(), agentL.Count);
-                        //Draw agent
-                        myBmpProcess.DrawAgent(Prey.CurrPoint, bmpMan.purpleBrsh, bmpPrey);
 
-                        //Add to agentList
-                        agentL.Add(Prey);
-                        usedRanVer.Add(vOrg.GetId());//Agregar a la lista de numeros Aletorios
+                        if(Prey.Tree != null)
+                        {
+                            //Draw agent
+                            myBmpProcess.DrawAgent(Prey.CurrPoint, bmpMan.purpleBrsh, bmpPrey);
 
-                        pictureBoxImg.Image = bmpPrey;
-                        pictureBoxImg.Refresh();
+                            //Add to agentList
+                            agentL.Add(Prey);
+                            usedRanVer.Add(vOrg.GetId());//Agregar a la lista de numeros Aletorios
 
-                        tbHunters.Maximum--;
+                            pictureBoxImg.Image = bmpPrey;
+                            pictureBoxImg.Refresh();
 
+                            tbHunters.Maximum--;
+                            //Update Label
+                            labelOrgDes.Text = "Org: " + Prey.Tree.VerL[0].GetId()
+                                + "   Des:" + Prey.Tree.VerL[Prey.Tree.VerL.Count - 1].GetId();
+                            //Enable button Add hunter
+                            bttnAddHunter.Enabled = true;
+                        }
 
-                        //Update Label
-                        labelOrgDes.Text = "Org: " + Prey.Tree.VerL[0].GetId()
-                            + "   Des:" + Prey.Tree.VerL[Prey.Tree.VerL.Count - 1].GetId();
-                        //Enable button Add hunter
-                        bttnAddHunter.Enabled = true;
                     } else
                     {
                         MessageBox.Show("Ya hay un agente con ese origen.");
