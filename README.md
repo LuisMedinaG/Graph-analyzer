@@ -1,4 +1,4 @@
-# Image analysis
+# Graph analyzer
 
 ## Description
 Application that detects circles in an image, generates a graph connecting circles without obstructions between them and identifies the minimum path between two nodes using the Dijkstra algorithm. Also, it generates particles that animate above the graph, following a path created with the DFS and BFS algorithms.
