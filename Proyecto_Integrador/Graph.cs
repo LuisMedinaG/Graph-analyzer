@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Proyecto_Integrador
+namespace GraphAnalyser
 {
     public class Graph
     {

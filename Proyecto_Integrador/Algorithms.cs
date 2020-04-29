@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 
-namespace Proyecto_Integrador
+namespace GraphAnalyser
 {
     class Algorithms
     {
@@ -154,7 +154,7 @@ namespace Proyecto_Integrador
                     }
                 } catch(Exception)
                 {
-                    System.Windows.Forms.MessageBox.Show("Verice no conexo.");
+                    System.Windows.Forms.MessageBox.Show("Vertex not connected.");
                     return null;
                 }
             }

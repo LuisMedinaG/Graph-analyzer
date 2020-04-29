@@ -3,7 +3,7 @@
  * Date: 28/05/2019
  * Time: 12:51 a. m. 
  */
-namespace Proyecto_Integrador
+namespace GraphAnalyser
 {
 	partial class MainForm
 	{

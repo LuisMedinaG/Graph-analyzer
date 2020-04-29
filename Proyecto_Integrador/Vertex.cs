@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Collections.Generic;
 
-namespace Proyecto_Integrador
+namespace GraphAnalyser
 {
     public class Vertex
     {
@@ -71,7 +71,7 @@ namespace Proyecto_Integrador
 
         public override string ToString()
         {
-            return string.Format("Vertice {0}({1},{2})", id, p.X, p.Y);
+            return string.Format("Vertex {0}({1},{2})", id, p.X, p.Y);
         }
 
         public bool IsLEave( List<Vertex> visited )

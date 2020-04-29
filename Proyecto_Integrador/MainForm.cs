@@ -4,11 +4,10 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Proyecto_Integrador
+namespace GraphAnalyser
 {
     public partial class MainForm : Form
     {
-
         BmpProcessor myBmpProcess;
         Random rand;
         Algorithms alg;
@@ -38,16 +37,16 @@ namespace Proyecto_Integrador
             bttnCaMaLaAg.Enabled = false;
             bttnCaMaLaVer.Enabled = false;
             tbNumVer.Enabled = false;
-            //Act 4
+            // 4
             bttnPrim.Enabled = false;
             bttnKruskal.Enabled = false;
             bttnAnimatePrim.Enabled = false;
             bttnAnimateKruskal.Enabled = false;
             bttnBoth.Enabled = false;
-            //Act 5
+            // 5
             bttnAddHunter.Enabled = false;
             bttnAddPrey.Enabled = false;
-            //Act 6
+            // 6
             bttnBruFor.Enabled = false;
             bttnDivCon.Enabled = false;
             bttnFinBFS.Enabled = false;
@@ -147,7 +146,7 @@ namespace Proyecto_Integrador
             return MyNumber;
         }
 
-        //Act 1, 2
+        // 1, 2
         private void BttnLoadImgClick( object sender, EventArgs e )
         {
             DisableAllBttns();
@@ -157,7 +156,7 @@ namespace Proyecto_Integrador
                 bmpMan.bmpOrg = new Bitmap(openFileDialog1.FileName);
             } catch(Exception)
             {
-                MessageBox.Show("Error: Archivo no existente");
+                MessageBox.Show("Error: The file does not exist.");
                 return;
             }
             //Fill picture box with Original (UNTOCHED)
@@ -211,7 +210,7 @@ namespace Proyecto_Integrador
                 }
             } else
             {
-                MessageBox.Show("No contiene aristas.");
+                MessageBox.Show("Does not contain edges.");
             }
         }
         private void BttnCaMaLaVer_Click( object sender, EventArgs e )
@@ -247,13 +246,13 @@ namespace Proyecto_Integrador
             tV.Nodes.Clear();
             tV.Nodes.Add(algStr);
 
-            tV.Nodes[0].Nodes.Add("Orden de aceptacion");
+            tV.Nodes[0].Nodes.Add("Acceptance order");
             foreach(Edge e in ARM.EdgL)
             {
                 tV.Nodes[0].Nodes.Add(e.GetId() + 1 + ")  " + e.ToTree());
                 aW += e.GetPonderacion();
             }
-            tV.Nodes[0].Nodes.Add("Peso acumulado: " + String.Format("{0:0.00}", aW));
+            tV.Nodes[0].Nodes.Add("Accumulated weight: " + String.Format("{0:0.00}", aW));
         }
 
         //Act 4
@@ -385,15 +384,15 @@ namespace Proyecto_Integrador
 
                     } else
                     {
-                        MessageBox.Show("Ya hay un agente con ese origen.");
+                        MessageBox.Show("There is already an agent with that origin.");
                     }
                 } else
                 {
-                    MessageBox.Show("Origen y destino tienen que ser distintos.");
+                    MessageBox.Show("Origin and destination have to be different.");
                 }
             } else
             {
-                MessageBox.Show("No se ha seleccionado origen/destino");
+                MessageBox.Show("Origin / destination not selected.");
             }
         }
         private void BttnAddHunter_Click( object sender, EventArgs e )

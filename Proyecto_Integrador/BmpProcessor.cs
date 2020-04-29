@@ -6,7 +6,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Threading;
 
-namespace Proyecto_Integrador
+namespace GraphAnalyser
 {
     public class BmpProcessor
     {
@@ -95,10 +95,10 @@ namespace Proyecto_Integrador
 
         private void DrawCenter( Point pCent, Bitmap bmp )
         {
-            //Pen penBlue = new Pen(Color.Red, 4);
-            //gBmp = Graphics.FromImage(bmp);
-            //gBmp.DrawLine(penBlue, pCent, new Point(pCent.X + 10, pCent.Y));
-            //pbImg.Refresh();
+            Pen penBlue = new Pen(Color.Red, 4);
+            gBmp = Graphics.FromImage(bmp);
+            gBmp.DrawLine(penBlue, pCent, new Point(pCent.X + 10, pCent.Y));
+            pbImg.Refresh();
             const int k = 8;
             for(int i = -k; i < k; i++)
                 for(int j = -k; j < k; j++)
@@ -211,10 +211,10 @@ namespace Proyecto_Integrador
             lastA = agn.GetUsadas()[size - 1];
 
             tv.Nodes.Clear();
-            tv.Nodes.Add("Agente("
-                + agn.GetId() + "), Del vertice "
-                + firstA.GetOrigen().GetId() + " al vertice "
-                + lastA.GetDestino().GetId() + "\n Distancia total: " +
+            tv.Nodes.Add("Agent("
+                + agn.GetId() + "), of vertex "
+                + firstA.GetOrigen().GetId() + " to vertex "
+                + lastA.GetDestino().GetId() + "\n Total distance: " +
                 agn.GetDistAcu()
             );
         }
@@ -258,7 +258,7 @@ namespace Proyecto_Integrador
                     DeepAnimation(ARM.EdgL.First.Value.GetOrigen(), visited, ARM);
                 } else
                 {
-                    MessageBox.Show("No contiene aristas.");
+                    MessageBox.Show("Does not contain edges.");
                 }
             }
         }
@@ -274,9 +274,9 @@ namespace Proyecto_Integrador
                     if(vertex == edgeA.GetOrigen() && !visited.Contains(edgeA.GetDestino()))
                     {
                         AnimateEdge(bmpARM, edgeA.GetLP());
-                        DeepAnimation(edgeA.GetDestino(), visited, Tree);//diff-
+                        DeepAnimation(edgeA.GetDestino(), visited, Tree);
                         lPR = new List<Point>(edgeA.GetLP());
-                        lPR.Reverse();//diff
+                        lPR.Reverse();
                         if(visited.Count <= Tree.EdgL.Count)
                         {
                             AnimateEdge(bmpARM, lPR);
@@ -286,7 +286,7 @@ namespace Proyecto_Integrador
                         lPR = new List<Point>(edgeA.GetLP());
                         lPR.Reverse();
                         AnimateEdge(bmpARM, lPR);
-                        DeepAnimation(edgeA.GetOrigen(), visited, Tree);//diff-
+                        DeepAnimation(edgeA.GetOrigen(), visited, Tree);
                         lPR = edgeA.GetLP();
                         if(visited.Count <= Tree.EdgL.Count)
                         {
@@ -312,7 +312,7 @@ namespace Proyecto_Integrador
             {
                 lAgents.Sort(CompLAg);
 
-                foreach(Agent A in lAgents)//por cada agente en ListaAgentes
+                foreach(Agent A in lAgents)
                 {
                     lPU = A.GetLPU();
                     lLP.Add(lPU);
@@ -320,7 +320,7 @@ namespace Proyecto_Integrador
                 DrawAllAgents(lLP);
             } else
             {
-                MessageBox.Show("No contiene aristas.");
+                MessageBox.Show("Does not contain edges.");
             }
         }
         private void AnimateEdge( Bitmap bmp, List<Point> lP )
@@ -373,18 +373,18 @@ namespace Proyecto_Integrador
             {
                 for(i = 0; i < agentL.Count; i++)
                 {
-                    agn = agentL[i];//Agente actual
-                    currE = agn.CurrEdge.Value;//Arista actual
-                    currP = agn.CurrPoint;//Punto actual
+                    agn = agentL[i];// Current agent
+                    currE = agn.CurrEdge.Value;// Current edge
+                    currP = agn.CurrPoint;// Current point
 
                     brsh = agn.IsPrey ? purpleBrsh : orangeBrsh;
-                    if(agn.CONT_P < agn.LP.Count)//Total de todos lo puntos del Grafo
+                    if(agn.CONT_P < agn.LP.Count)// All points in graph
                     {
-                        if(!currE.GetLP().Contains(currP))//Punto en que se encuentra de la arista
+                        if(!currE.GetLP().Contains(currP))
                         {
                             if(!agn.IsPrey)
                             {
-                                agn.CurrEdge = agn.CurrEdge.Next;//Hunter, Tomo la siguiente arista
+                                agn.CurrEdge = agn.CurrEdge.Next;// HUNTER take next edge
                             } else
                             {
                                 agn.CurrEdge = agn.NextEdg();
@@ -392,13 +392,13 @@ namespace Proyecto_Integrador
                         }
                         if(!agn.IsPrey)
                         {
-                            agn.CurrPoint = agn.NextPoint();//Soy Cazador, Tomo el siguiente punto en la lista
-                        } else
+                            agn.CurrPoint = agn.NextPoint();// HUNTER, get next point of the list
+            } else
                         {
                             agnDanger = agn.IsInDanger(agentL, currE);
                             if(agnDanger == null)
                             {
-                                agn.CurrPoint = agn.NextPoint();//Soy PRESA, Tomo el siguiente punto en la lista
+                                agn.CurrPoint = agn.NextPoint(); // PREY, get next point of the list
                             } else
                             {
                                 if(agn.CONT_P - 10 > 0 && !agn.IsInVertex())
@@ -408,7 +408,7 @@ namespace Proyecto_Integrador
                                 }
                                 if(agn.IsTouchingHunter(agnDanger))
                                 {
-                                    MessageBox.Show("Presa atrapada.");
+                                    MessageBox.Show("Prey was caught.");
                                     agentL.Remove(agn);
                                 }
                             }
@@ -417,16 +417,16 @@ namespace Proyecto_Integrador
                     {
                         if(agn.IsPrey)
                         {
-                            MessageBox.Show("Fin recorrido.");
+                            MessageBox.Show("End of tour.");
                         }
-                        agentL.Remove(agn);//Si llegue al final, elimino agente
+                        agentL.Remove(agn);// Get to end, delete agent
                     }
 
-                    if(agn.CurrPoint != agn.LP[agn.LP.Count - 1])//Si el sig punto no sale de los indices
+                    if(agn.CurrPoint != agn.LP[agn.LP.Count - 1])
                         DrawAgent(new Point(agn.CurrPoint.X - 1, agn.CurrPoint.Y - 1), whiteBrsh, bmp);
                     DrawAgent(agn.CurrPoint, brsh, bmp);
                 }
-                pbImg.Refresh();//**** ¡Elimina el bmp! ****//
+                pbImg.Refresh();
                 ClearBitmap(bmp);
             }
         }
@@ -567,7 +567,7 @@ namespace Proyecto_Integrador
                 {
                     TreeFounded = true;
                     DrawCircle(v, bmp, orangeBrsh);
-                    label.Text = "Vertice origen: " + v.GetId().ToString();
+                    label.Text = "Vertex of origin: " + v.GetId().ToString();
                     DrawARM(bmp, Tree, orangeBrsh);
                     pbImg.Refresh();
                     break;
@@ -575,7 +575,7 @@ namespace Proyecto_Integrador
             }
             if(!TreeFounded)
             {
-                MessageBox.Show("No se encontro arbol");
+                MessageBox.Show("Tree not found.");
             }
         }
 

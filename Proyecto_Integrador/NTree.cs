@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Proyecto_Integrador
+namespace GraphAnalyser
 {
     public class NTree<T>
     {

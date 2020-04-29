@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Proyecto_Integrador
+namespace GraphAnalyser
 {
 	internal sealed class Program
 	{

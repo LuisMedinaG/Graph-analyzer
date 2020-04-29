@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Proyecto_Integrador
+namespace GraphAnalyser
 {
     public class Agent
     {
@@ -92,7 +92,7 @@ namespace Proyecto_Integrador
                 }
             } else
             {
-                MessageBox.Show("No contiene aristas.");
+                MessageBox.Show("Does not contain edges.");
             }
         }
 

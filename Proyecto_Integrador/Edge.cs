@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace Proyecto_Integrador
+namespace GraphAnalyser
 {
     public class Edge
     {
