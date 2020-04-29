@@ -12,8 +12,8 @@ Application that detects circles in an image, generates a graph connecting circl
 > ![enter image description here](https://raw.githubusercontent.com/HumbertoMedinaG/Graph-analyzer/master/Resources/prey-hunter-game.gif)
 
 ### Closest pair of points
-> Algorithms time comparison
-![enter image description here](https://raw.githubusercontent.com/HumbertoMedinaG/Graph-analyzer/master/Resources/4-closest-pair-of-points.png)
+Algorithms time comparison
+> ![enter image description here](https://raw.githubusercontent.com/HumbertoMedinaG/Graph-analyzer/master/Resources/4-closest-pair-of-points.png)
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
