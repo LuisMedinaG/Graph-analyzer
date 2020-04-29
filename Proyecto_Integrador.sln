@@ -1,8 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-# SharpDevelop 5.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Proyecto_Integrador", "Proyecto_Integrador\Proyecto_Integrador.csproj", "{33F3D7C8-AAC7-4E9F-A57E-99A85184DC8F}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29911.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Graph_analyser", "Proyecto_Integrador\Graph_analyser.csproj", "{33F3D7C8-AAC7-4E9F-A57E-99A85184DC8F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,5 +15,11 @@ Global
 		{33F3D7C8-AAC7-4E9F-A57E-99A85184DC8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33F3D7C8-AAC7-4E9F-A57E-99A85184DC8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33F3D7C8-AAC7-4E9F-A57E-99A85184DC8F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {97E5E07A-62CF-4611-ADBF-2EDA03039743}
 	EndGlobalSection
 EndGlobal
